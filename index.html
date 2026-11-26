@@ -3,95 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
-  <title>Мои ссылки</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SADIST</title>
   <style>
+    /* Современный шрифт и базовые настройки */
+    :root {
+      --bg-color: #050505;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --accent-red: #ff3333;
+      --accent-glow: rgba(255, 51, 51, 0.4);
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0a0a0a; /* Глубокий черный фон */
-      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
       display: flex;
-      flex-direction: column; /* Выстраиваем элементы в колонку */
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       margin: 0;
-      padding: 40px;
+      padding: 20px;
       box-sizing: border-box;
+      /* Легкое алое свечение на фоне */
+      background: radial-gradient(circle at 50% 0%, rgba(255, 51, 51, 0.15) 0%, var(--bg-color) 60%);
+      background-attachment: fixed;
     }
 
-    /* Стиль для заголовка */
-    h1 {
-      color: #ff2400; /* Алый цвет */
-      font-size: 36px;
-      margin-bottom: 40px;
+    /* Стильный заголовок */
+    .header {
       text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .header h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #ffffff, #ff3333);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      text-shadow: 0 0 15px rgba(255, 36, 0, 0.6); /* Легкое алое свечение */
     }
 
-    /* Контейнер для кнопок */
-    .links-container {
-      display: flex;
-      flex-wrap: wrap;
+    .header p {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-top: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Сетка для кнопок */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 20px;
-      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+      animation: fadeInUp 0.8s ease-out;
     }
 
-    /* Стиль для кнопок */
+    /* Карточки (кнопки) */
     a {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background-color: #1a1a1a; /* Темно-серый фон кнопки */
-      color: #ff2400; /* Алый текст */
-      border: 2px solid #ff2400; /* Алая рамка */
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text-main);
       text-decoration: none;
-      padding: 30px 40px;
-      border-radius: 16px;
-      font-size: 18px;
-      font-weight: bold;
-      transition: all 0.3s ease;
+      padding: 30px 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
-      min-width: 140px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    /* Эффект при наведении мышки */
+    /* Иконки (эмодзи) */
+    a .icon {
+      font-size: 36px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    /* Эффект при наведении (Hover) */
     a:hover {
-      background-color: #ff2400; /* Кнопка становится алой */
-      color: #000000; /* Текст становится черным */
-      transform: translateY(-5px); /* Кнопка немного подпрыгивает */
-      box-shadow: 0 8px 20px rgba(255, 36, 0, 0.4); /* Алое свечение */
+      background: rgba(255, 51, 51, 0.05);
+      border-color: var(--accent-red);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px -10px var(--accent-glow);
     }
 
-    a span.icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-      /* Убираем алое свечение с эмодзи, чтобы они были цветными */
-      color: initial; 
+    a:hover .icon {
+      transform: scale(1.15);
+    }
+
+    /* Анимации появления */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Адаптив для телефонов */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 32px; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+      a { padding: 20px 10px; font-size: 14px; }
+      a .icon { font-size: 30px; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Добро пожаловать SADIST</h1>
+  <div class="header">
+    <h1>SADIST</h1>
+    <p>Добро пожаловать</p>
+  </div>
 
-  <div class="links-container">
+  <div class="grid">
     <a href="https://youtube.com" target="_blank">
-      <span class="icon">▶</span> YouTube
+      <span class="icon">▶️</span>
+      YouTube
     </a>
+    
     <a href="https://music.yandex.ru" target="_blank">
-      <span class="icon">🎵</span> Яндекс.Музыка
+      <span class="icon">🎵</span>
+      Музыка
     </a>
+    
     <a href="https://vk.com" target="_blank">
-      <span class="icon">💬</span> ВКонтакте
+      <span class="icon">💬</span>
+      ВКонтакте
     </a>
-    <a href="https://ya.ru" target="_blank">
-      <span class="icon">🔍</span> Яндекс
+
+    <a href="https://t.me" target="_blank">
+      <span class="icon">✈️</span>
+      Telegram
     </a>
-    <!-- Сюда добавляй новые ссылки по такому же образцу -->
+    
+    <!-- Чтобы добавить новую кнопку, скопируй блок <a>...</a> выше и поменяй ссылку и название -->
   </div>
 
 </body>
