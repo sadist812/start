@@ -5,7 +5,6 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SADIST</title>
-  <!-- Иконка капли крови -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
   
   <style>
@@ -31,10 +30,9 @@
       margin: 0;
       padding: 20px;
       box-sizing: border-box;
-      overflow: hidden; /* Чтобы фон не создавал скролл */
+      overflow: hidden;
     }
 
-    /* Холст для частиц */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -45,7 +43,6 @@
       pointer-events: none;
     }
 
-    /* Контейнер для контента, чтобы он был поверх фона */
     .content {
       position: relative;
       z-index: 1;
@@ -56,7 +53,6 @@
       max-width: 800px;
     }
 
-    /* Шапка с часами */
     .header {
       text-align: center;
       margin-bottom: 30px;
@@ -74,7 +70,6 @@
       text-transform: uppercase;
     }
 
-    /* Часы и дата */
     .clock-container {
       margin-top: 10px;
       color: var(--accent-red);
@@ -95,7 +90,6 @@
       text-transform: capitalize;
     }
 
-    /* Строка поиска */
     .search-box {
       width: 100%;
       max-width: 500px;
@@ -149,10 +143,9 @@
       transform: scale(1.1);
     }
 
-    /* Сетка для кнопок */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 20px;
       width: 100%;
       animation: fadeInUp 0.8s ease-out;
@@ -177,10 +170,13 @@
       text-align: center;
     }
 
-    a .icon {
-      font-size: 36px;
+    /* Стили для SVG иконок */
+    a svg {
+      width: 36px;
+      height: 36px;
       margin-bottom: 15px;
-      transition: transform 0.3s ease;
+      fill: var(--text-main); /* По умолчанию белые */
+      transition: all 0.3s ease;
     }
 
     a:hover {
@@ -188,10 +184,13 @@
       border-color: var(--accent-red);
       transform: translateY(-5px);
       box-shadow: 0 10px 30px -10px var(--accent-glow);
+      color: var(--accent-red); /* Текст становится алым */
     }
 
-    a:hover .icon {
+    a:hover svg {
+      fill: var(--accent-red); /* Иконка становится алой */
       transform: scale(1.15);
+      filter: drop-shadow(0 0 8px var(--accent-glow)); /* Свечение иконки */
     }
 
     @keyframes fadeInDown {
@@ -208,14 +207,13 @@
       .header h1 { font-size: 32px; }
       .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
       a { padding: 20px 10px; font-size: 14px; }
-      a .icon { font-size: 30px; }
+      a svg { width: 30px; height: 30px; }
       .search-box { max-width: 90%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Фон с частицами -->
   <canvas id="bg-canvas"></canvas>
 
   <div class="content">
@@ -227,7 +225,6 @@
       </div>
     </div>
 
-    <!-- Приватный поиск (DuckDuckGo) -->
     <div class="search-box">
       <form action="https://duckduckgo.com/" method="GET" target="_blank">
         <input type="text" name="q" placeholder="Безопасный поиск (DuckDuckGo)..." required autocomplete="off">
@@ -236,25 +233,34 @@
     </div>
 
     <div class="grid">
-      <!-- Добавлен rel="noopener noreferrer" для безопасности! -->
+      <!-- YouTube -->
       <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-        <span class="icon">▶️</span>
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         YouTube
       </a>
       
+      <!-- Яндекс Музыка (Иконка наушников) -->
       <a href="https://music.yandex.ru" target="_blank" rel="noopener noreferrer">
-        <span class="icon">🎵</span>
+        <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"/></svg>
         Музыка
       </a>
       
+      <!-- ВКонтакте -->
       <a href="https://vk.com" target="_blank" rel="noopener noreferrer">
-        <span class="icon">💬</span>
+        <svg viewBox="0 0 24 24"><path d="M21.579 6.855c.14-.465 0-.806-.662-.806h-2.194c-.554 0-.81.294-.949.618 0 0-1.108 2.699-2.678 4.45-.508.508-.738.67-1.016.67-.138 0-.337-.162-.337-.627V6.855c0-.557-.16-.806-.62-.806h-3.45c-.346 0-.554.257-.554.501 0 .524.785.644.866 2.112v3.187c0 .694-.126.82-.404.82-.738 0-2.533-2.708-3.597-5.81-.208-.604-.417-.85-.974-.85H2.872c-.623 0-.747.294-.747.618 0 .577.738 3.42 3.42 7.184 1.79 2.598 4.304 4.004 6.59 4.004 1.374 0 1.543-.31 1.543-.842v-1.94c0-.612.128-.734.56-.734.316 0 .86.16 2.128 1.382 1.448 1.448 1.686 2.134 2.501 2.134h2.194c.623 0 .935-.31.748-.92-.204-.609-1.328-1.916-2.451-3.17-.338-.4-.845-.827-1-.96-.209-.27-.15-.389 0-.632 0 0 1.772-2.497 2.46-5.166z"/></svg>
         ВКонтакте
       </a>
 
+      <!-- Telegram -->
       <a href="https://t.me" target="_blank" rel="noopener noreferrer">
-        <span class="icon">✈️</span>
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         Telegram
+      </a>
+
+      <!-- DeepSeek (Иконка нейросети/искры) -->
+      <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
+        DeepSeek
       </a>
     </div>
   </div>
@@ -289,28 +295,26 @@
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.size = Math.random() * 2 + 0.5; // Размер искры
-        this.speedX = Math.random() * 0.5 - 0.25; // Медленное движение по X
-        this.speedY = Math.random() * -0.5 - 0.1; // Медленный подъем вверх
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * -0.5 - 0.1;
         this.opacity = Math.random() * 0.5 + 0.1;
       }
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        // Если искра улетела вверх или вбок, возвращаем её вниз
         if (this.y < 0) this.y = height;
         if (this.x < 0) this.x = width;
         if (this.x > width) this.x = 0;
       }
       draw() {
-        ctx.fillStyle = `rgba(255, 51, 51, ${this.opacity})`; // Алый цвет
+        ctx.fillStyle = `rgba(255, 51, 51, ${this.opacity})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // Создаем 50 искр (не нагружает систему)
     for (let i = 0; i < 50; i++) {
       particles.push(new Particle());
     }
