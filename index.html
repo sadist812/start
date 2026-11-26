@@ -40,7 +40,7 @@
         linear-gradient(90deg, rgba(255, 26, 26, 0.03) 1px, transparent 1px);
       background-size: 50px 50px;
       background-position: center center;
-      cursor: crosshair; /* Прикольный курсор */
+      cursor: crosshair;
     }
 
     #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
@@ -56,7 +56,7 @@
       max-width: 700px;
     }
 
-    .header { text-align: center; margin-bottom: 30px; animation: fadeInDown 0.8s ease-out; }
+    .header { text-align: center; margin-bottom: 40px; animation: fadeInDown 0.8s ease-out; }
     #greeting { color: var(--text-muted); font-size: 16px; font-weight: 500; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 8px; display: block; }
     .header h1 { font-size: 56px; font-weight: 800; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #ffffff 0%, #ff1a1a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; line-height: 1; }
     
@@ -65,48 +65,13 @@
     #weather { font-size: 15px; font-weight: 500; color: var(--text-main); background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 14px; border-radius: 12px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; }
     #date { font-size: 14px; color: var(--text-muted); letter-spacing: 2px; margin-top: 8px; text-transform: capitalize; font-weight: 500; }
 
-    .search-box { width: 100%; max-width: 550px; margin-bottom: 20px; animation: fadeInUp 0.8s ease-out; }
+    .search-box { width: 100%; max-width: 550px; margin-bottom: 40px; animation: fadeInUp 0.8s ease-out; }
     .search-box form { display: flex; width: 100%; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 6px 20px; box-sizing: border-box; backdrop-filter: blur(20px); transition: all 0.3s ease; }
     .search-box form:focus-within { border-color: var(--accent-red); box-shadow: 0 0 25px rgba(255, 26, 26, 0.2); background: rgba(255, 255, 255, 0.04); }
     .search-box input { flex-grow: 1; background: transparent; border: none; color: #fff; font-size: 16px; font-family: inherit; padding: 12px 0; outline: none; }
     .search-box input::placeholder { color: var(--text-muted); }
     .search-box button { background: transparent; border: none; color: var(--accent-red); font-size: 20px; cursor: pointer; padding: 0 10px; transition: transform 0.2s; }
     .search-box button:hover { transform: scale(1.1); }
-
-    /* Таймер Помодоро */
-    .pomodoro-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-      animation: fadeInUp 0.8s ease-out;
-    }
-    .pomo-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 10px 24px;
-      border-radius: 20px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: inherit;
-    }
-    .pomo-btn:hover {
-      border-color: var(--accent-red);
-      box-shadow: 0 0 15px rgba(255, 26, 26, 0.15);
-      color: var(--accent-red);
-    }
-    .pomo-btn.active {
-      border-color: var(--accent-red);
-      background: rgba(255, 26, 26, 0.1);
-      color: var(--accent-red);
-      box-shadow: 0 0 20px var(--accent-glow);
-    }
 
     .links-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; animation: fadeInUp 0.8s ease-out; margin-bottom: 40px; }
     a.link-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(10px); color: var(--text-main); text-decoration: none; padding: 30px 20px; border-radius: 24px; font-size: 15px; font-weight: 600; transition: all 0.3s ease; text-align: center; width: 160px; box-sizing: border-box; overflow: hidden; }
@@ -191,11 +156,6 @@
       </form>
     </div>
 
-    <!-- Помодоро Таймер -->
-    <div class="pomodoro-wrap">
-      <button id="pomo-btn" class="pomo-btn">▶ Фокус (25:00)</button>
-    </div>
-
     <div class="links-wrapper">
       <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -234,8 +194,7 @@
     </div>
   </div>
 
-  <!-- Кнопка шума -->
-  <button id="noise-btn" class="noise-btn" title="Включить фоновый шум">☁️</button>
+  <button id="noise-btn" class="noise-btn" title="Включить звук для продуктивности">☁️</button>
 
   <script>
     // --- 1. ЧАСЫ И ПРИВЕТСТВИЕ ---
@@ -276,45 +235,7 @@
       });
     });
 
-    // --- 5. ТАЙМЕР ПОМОДОРО ---
-    let pomoTime = 25 * 60; // 25 минут в секундах
-    let pomoTimer = null;
-    let isPomoRunning = false;
-    const pomoBtn = document.getElementById('pomo-btn');
-
-    function updatePomoDisplay() {
-      const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
-      const s = (pomoTime % 60).toString().padStart(2, '0');
-      pomoBtn.innerText = `⏸ Фокус (${m}:${s})`;
-    }
-
-    pomoBtn.addEventListener('click', () => {
-      if (isPomoRunning) {
-        clearInterval(pomoTimer);
-        pomoBtn.classList.remove('active');
-        pomoBtn.innerText = `▶ Фокус (${Math.floor(pomoTime/60).toString().padStart(2, '0')}:${(pomoTime%60).toString().padStart(2, '0')})`;
-        isPomoRunning = false;
-      } else {
-        isPomoRunning = true;
-        pomoBtn.classList.add('active');
-        updatePomoDisplay();
-        pomoTimer = setInterval(() => {
-          pomoTime--;
-          updatePomoDisplay();
-          if (pomoTime <= 0) {
-            clearInterval(pomoTimer);
-            isPomoRunning = false;
-            pomoTime = 25 * 60;
-            pomoBtn.classList.remove('active');
-            pomoBtn.innerText = `▶ Фокус (25:00)`;
-            playBeep(); // Звук окончания
-            alert("Время фокуса вышло! Пора отдохнуть.");
-          }
-        }, 1000);
-      }
-    });
-
-    // --- 6. ФОНОВЫЙ ШУМ (Генератор) ---
+    // --- 5. ФОНОВЫЙ ШУМ (Розовый шум для продуктивности) ---
     const noiseBtn = document.getElementById('noise-btn');
     let audioCtx = null;
     let noiseSource = null;
@@ -329,56 +250,52 @@
         noiseBtn.innerText = '☁️';
         isNoisePlaying = false;
       } else {
-        // Генерация коричневого шума (похож на дождь)
-        const bufferSize = audioCtx.sampleRate * 2; 
+        // Генерация качественного "Розового шума" (Pink Noise)
+        const bufferSize = audioCtx.sampleRate * 4; // 4 секунды буфера
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        let lastOut = 0;
+        
+        let b0, b1, b2, b3, b4, b5, b6;
+        b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+        
         for (let i = 0; i < bufferSize; i++) {
           const white = Math.random() * 2 - 1;
-          data[i] = (lastOut + (0.02 * white)) / 1.02;
-          lastOut = data[i];
-          data[i] *= 3.5; 
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+          data[i] *= 0.11; // Нормализация громкости
+          b6 = white * 0.115926;
         }
+        
         noiseSource = audioCtx.createBufferSource();
         noiseSource.buffer = buffer;
         noiseSource.loop = true;
         
-        // Фильтр, чтобы звук был мягче
+        // Легкий фильтр, чтобы сделать звук еще более глубоким и бархатистым
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 1000;
+        filter.frequency.value = 800;
 
         noiseSource.connect(filter);
         filter.connect(audioCtx.destination);
         noiseSource.start();
         
         noiseBtn.classList.add('active');
-        noiseBtn.innerText = '🌧️';
+        noiseBtn.innerText = '🎧'; // Меняем иконку на наушники
         isNoisePlaying = true;
       }
     });
 
-    // Звук для таймера
-    function playBeep() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 1);
-    }
-
-    // --- 7. ШЛЕЙФ ЗА КУРСОРОМ ---
+    // --- 6. ДЕЛИКАТНЫЙ ШЛЕЙФ ЗА КУРСОРОМ ---
     const cursorCanvas = document.getElementById('cursor-canvas');
     const cursorCtx = cursorCanvas.getContext('2d');
     let cWidth, cHeight;
     let trail = [];
+    let lastMouseMove = 0;
 
     function resizeCursor() {
       cWidth = cursorCanvas.width = window.innerWidth;
@@ -388,19 +305,24 @@
     resizeCursor();
 
     window.addEventListener('mousemove', (e) => {
-      trail.push({
-        x: e.clientX,
-        y: e.clientY,
-        alpha: 1,
-        size: Math.random() * 3 + 1
-      });
+      const now = Date.now();
+      // Создаем искру не чаще, чем раз в 40 миллисекунд (чтобы шлейф был легким)
+      if (now - lastMouseMove > 40) {
+        trail.push({
+          x: e.clientX,
+          y: e.clientY,
+          alpha: 0.6, // Начальная прозрачность
+          size: Math.random() * 2.5 + 1
+        });
+        lastMouseMove = now;
+      }
     });
 
     function animateCursor() {
       cursorCtx.clearRect(0, 0, cWidth, cHeight);
       for (let i = 0; i < trail.length; i++) {
         let p = trail[i];
-        p.alpha -= 0.02; // Затухание
+        p.alpha -= 0.03; // Быстрое затухание, чтобы не было грязи
         if (p.alpha <= 0) {
           trail.splice(i, 1);
           i--;
@@ -415,7 +337,7 @@
     }
     animateCursor();
 
-    // --- 8. ЖИВОЙ ФОН (Искры) ---
+    // --- 7. ЖИВОЙ ФОН (Искры) ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
