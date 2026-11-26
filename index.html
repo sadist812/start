@@ -7,7 +7,6 @@
   <title>SADIST</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
   
-  <!-- Подключаем премиальный шрифт Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -36,23 +35,16 @@
       padding: 40px 20px;
       box-sizing: border-box;
       overflow-y: auto;
-      /* Неоновая сетка на фоне */
       background-image: 
         linear-gradient(rgba(255, 26, 26, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 26, 26, 0.03) 1px, transparent 1px);
       background-size: 50px 50px;
       background-position: center center;
+      cursor: crosshair; /* Прикольный курсор */
     }
 
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    #cursor-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; }
 
     .content {
       position: relative;
@@ -64,276 +56,102 @@
       max-width: 700px;
     }
 
-    .header {
-      text-align: center;
+    .header { text-align: center; margin-bottom: 30px; animation: fadeInDown 0.8s ease-out; }
+    #greeting { color: var(--text-muted); font-size: 16px; font-weight: 500; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 8px; display: block; }
+    .header h1 { font-size: 56px; font-weight: 800; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #ffffff 0%, #ff1a1a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; line-height: 1; }
+    
+    .info-container { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 15px; }
+    #time { font-size: 40px; font-weight: 700; letter-spacing: 2px; color: var(--accent-red); text-shadow: 0 0 20px var(--accent-glow); }
+    #weather { font-size: 15px; font-weight: 500; color: var(--text-main); background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 14px; border-radius: 12px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; }
+    #date { font-size: 14px; color: var(--text-muted); letter-spacing: 2px; margin-top: 8px; text-transform: capitalize; font-weight: 500; }
+
+    .search-box { width: 100%; max-width: 550px; margin-bottom: 20px; animation: fadeInUp 0.8s ease-out; }
+    .search-box form { display: flex; width: 100%; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 6px 20px; box-sizing: border-box; backdrop-filter: blur(20px); transition: all 0.3s ease; }
+    .search-box form:focus-within { border-color: var(--accent-red); box-shadow: 0 0 25px rgba(255, 26, 26, 0.2); background: rgba(255, 255, 255, 0.04); }
+    .search-box input { flex-grow: 1; background: transparent; border: none; color: #fff; font-size: 16px; font-family: inherit; padding: 12px 0; outline: none; }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box button { background: transparent; border: none; color: var(--accent-red); font-size: 20px; cursor: pointer; padding: 0 10px; transition: transform 0.2s; }
+    .search-box button:hover { transform: scale(1.1); }
+
+    /* Таймер Помодоро */
+    .pomodoro-wrap {
+      display: flex;
+      justify-content: center;
       margin-bottom: 40px;
-      animation: fadeInDown 0.8s ease-out;
+      animation: fadeInUp 0.8s ease-out;
     }
-
-    #greeting {
-      color: var(--text-muted);
-      font-size: 16px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 8px; /* Еще шире */
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .header h1 {
-      font-size: 56px;
-      font-weight: 800;
-      margin: 0;
-      letter-spacing: -2px;
-      background: linear-gradient(180deg, #ffffff 0%, #ff1a1a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-
-    .info-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
-    }
-
-    #time {
-      font-size: 40px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--accent-red);
-      text-shadow: 0 0 20px var(--accent-glow);
-    }
-
-    #weather {
-      font-size: 15px;
-      font-weight: 500;
+    .pomo-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--text-main);
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 6px 14px;
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #date {
-      font-size: 14px;
-      color: var(--text-muted);
-      letter-spacing: 2px;
-      margin-top: 8px;
-      text-transform: capitalize;
-      font-weight: 500;
-    }
-
-    .search-box {
-      width: 100%;
-      max-width: 550px;
-      margin-bottom: 50px;
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    .search-box form {
-      display: flex;
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px; /* Чуть менее круглые */
-      padding: 6px 20px;
-      box-sizing: border-box;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      transition: all 0.3s ease;
-    }
-
-    .search-box form:focus-within {
-      border-color: var(--accent-red);
-      box-shadow: 0 0 25px rgba(255, 26, 26, 0.2);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .search-box input {
-      flex-grow: 1;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      font-family: inherit;
-      padding: 12px 0;
-      outline: none;
-    }
-
-    .search-box input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .search-box button {
-      background: transparent;
-      border: none;
-      color: var(--accent-red);
-      font-size: 20px;
-      cursor: pointer;
-      padding: 0 10px;
-      transition: transform 0.2s;
-    }
-
-    .links-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      width: 100%;
-      animation: fadeInUp 0.8s ease-out;
-      margin-bottom: 50px;
-    }
-
-    /* Эффект стеклянных кнопок с прожектором */
-    a.link-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      color: var(--text-main);
-      text-decoration: none;
-      padding: 30px 20px;
-      border-radius: 24px;
-      font-size: 15px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      text-align: center;
-      width: 160px; 
-      box-sizing: border-box;
-      overflow: hidden; /* Чтобы прожектор не выходил за края */
-    }
-
-    /* Слой для эффекта прожектора */
-    a.link-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(
-        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 26, 26, 0.15),
-        transparent 40%
-      );
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    a.link-card:hover::before {
-      opacity: 1;
-    }
-
-    a.link-card svg {
-      position: relative;
-      z-index: 1;
-      width: 36px;
-      height: 36px;
-      margin-bottom: 15px;
-      fill: var(--text-main);
-      transition: all 0.3s ease;
-    }
-
-    a.link-card span {
-      position: relative;
-      z-index: 1;
-    }
-
-    a.link-card:hover {
-      border-color: rgba(255, 26, 26, 0.4);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px -10px rgba(255, 26, 26, 0.15);
-      color: var(--accent-red);
-    }
-
-    a.link-card:hover svg {
-      fill: var(--accent-red);
-      transform: scale(1.1);
-      filter: drop-shadow(0 0 12px rgba(255, 26, 26, 0.6));
-    }
-
-    /* Заметки */
-    .notes-section {
-      width: 100%;
-      animation: fadeInUp 0.8s ease-out;
-      margin-bottom: 20px;
-    }
-
-    .notes-section label {
-      display: block;
-      color: var(--text-muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      margin-left: 10px;
-      font-weight: 700;
-    }
-
-    textarea {
-      width: 100%;
-      height: 130px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      padding: 10px 24px;
       border-radius: 20px;
-      padding: 20px;
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 15px;
-      line-height: 1.6;
-      resize: vertical;
-      outline: none;
-      box-sizing: border-box;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: inherit;
     }
-
-    textarea:focus {
+    .pomo-btn:hover {
       border-color: var(--accent-red);
-      box-shadow: 0 0 20px rgba(255, 26, 26, 0.15);
+      box-shadow: 0 0 15px rgba(255, 26, 26, 0.15);
+      color: var(--accent-red);
+    }
+    .pomo-btn.active {
+      border-color: var(--accent-red);
+      background: rgba(255, 26, 26, 0.1);
+      color: var(--accent-red);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    textarea::placeholder {
-      color: rgba(255, 255, 255, 0.15);
-    }
+    .links-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; animation: fadeInUp 0.8s ease-out; margin-bottom: 40px; }
+    a.link-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(10px); color: var(--text-main); text-decoration: none; padding: 30px 20px; border-radius: 24px; font-size: 15px; font-weight: 600; transition: all 0.3s ease; text-align: center; width: 160px; box-sizing: border-box; overflow: hidden; }
+    a.link-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 26, 26, 0.15), transparent 40%); opacity: 0; transition: opacity 0.3s ease; z-index: 0; pointer-events: none; }
+    a.link-card:hover::before { opacity: 1; }
+    a.link-card svg { position: relative; z-index: 1; width: 36px; height: 36px; margin-bottom: 15px; fill: var(--text-main); transition: all 0.3s ease; }
+    a.link-card span { position: relative; z-index: 1; }
+    a.link-card:hover { border-color: rgba(255, 26, 26, 0.4); transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(255, 26, 26, 0.15); color: var(--accent-red); }
+    a.link-card:hover svg { fill: var(--accent-red); transform: scale(1.1); filter: drop-shadow(0 0 12px rgba(255, 26, 26, 0.6)); }
 
-    /* Кастомный скроллбар для заметок */
-    textarea::-webkit-scrollbar {
-      width: 6px;
-    }
-    textarea::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    textarea::-webkit-scrollbar-thumb {
-      background: rgba(255, 26, 26, 0.5);
-      border-radius: 10px;
-    }
-    textarea::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-red);
-    }
+    .notes-section { width: 100%; animation: fadeInUp 0.8s ease-out; margin-bottom: 20px; }
+    .notes-section label { display: block; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; margin-left: 10px; font-weight: 700; }
+    textarea { width: 100%; height: 130px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; color: var(--text-main); font-family: inherit; font-size: 15px; line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box; backdrop-filter: blur(10px); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+    textarea:focus { border-color: var(--accent-red); box-shadow: 0 0 20px rgba(255, 26, 26, 0.15); }
+    textarea::placeholder { color: rgba(255, 255, 255, 0.15); }
+    textarea::-webkit-scrollbar { width: 6px; }
+    textarea::-webkit-scrollbar-track { background: transparent; }
+    textarea::-webkit-scrollbar-thumb { background: rgba(255, 26, 26, 0.5); border-radius: 10px; }
+    textarea::-webkit-scrollbar-thumb:hover { background: var(--accent-red); }
 
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Кнопка белого шума */
+    .noise-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      z-index: 100;
     }
+    .noise-btn:hover { border-color: var(--accent-red); color: var(--accent-red); transform: scale(1.1); }
+    .noise-btn.active { color: var(--accent-red); border-color: var(--accent-red); box-shadow: 0 0 20px var(--accent-glow); text-shadow: 0 0 10px var(--accent-red); }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 600px) {
       .header h1 { font-size: 42px; }
@@ -341,20 +159,18 @@
       #time { font-size: 32px; }
       .info-container { flex-direction: column; gap: 10px; }
       .links-wrapper { gap: 15px; }
-      a.link-card { 
-        width: calc(50% - 15px); 
-        padding: 20px 10px; 
-      }
+      a.link-card { width: calc(50% - 15px); padding: 20px 10px; }
       a.link-card svg { width: 30px; height: 30px; }
       .search-box { max-width: 100%; }
-      /* На телефонах прожектор отключаем, чтобы не лагало */
       a.link-card::before { display: none; } 
+      .noise-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 20px; }
     }
   </style>
 </head>
 <body>
 
   <canvas id="bg-canvas"></canvas>
+  <canvas id="cursor-canvas"></canvas>
 
   <div class="content">
     <div class="header">
@@ -373,6 +189,11 @@
         <input type="text" name="q" placeholder="Поиск (DuckDuckGo)..." required autocomplete="off">
         <button type="submit">🔍</button>
       </form>
+    </div>
+
+    <!-- Помодоро Таймер -->
+    <div class="pomodoro-wrap">
+      <button id="pomo-btn" class="pomo-btn">▶ Фокус (25:00)</button>
     </div>
 
     <div class="links-wrapper">
@@ -411,26 +232,21 @@
       <label>Быстрые заметки</label>
       <textarea id="notes" placeholder="Пиши здесь свои мысли..."></textarea>
     </div>
-
   </div>
 
+  <!-- Кнопка шума -->
+  <button id="noise-btn" class="noise-btn" title="Включить фоновый шум">☁️</button>
+
   <script>
-    // --- 1. ЧАСЫ БЕЗ СЕКУНД, ДАТА И ПРИВЕТСТВИЕ ---
+    // --- 1. ЧАСЫ И ПРИВЕТСТВИЕ ---
     function updateClockAndGreeting() {
       const now = new Date();
       const optionsTime = { timeZone: 'Asia/Yekaterinburg', hour: '2-digit', minute: '2-digit' };
       const optionsDate = { timeZone: 'Asia/Yekaterinburg', weekday: 'long', day: 'numeric', month: 'long' };
-      
       document.getElementById('time').textContent = now.toLocaleTimeString('ru-RU', optionsTime);
       document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', optionsDate);
-
       const hour = parseInt(new Date().toLocaleString('en-US', { timeZone: 'Asia/Yekaterinburg', hour: 'numeric', hour12: false }));
-      let greetingText = "";
-      if (hour >= 5 && hour < 12) greetingText = "Доброе утро";
-      else if (hour >= 12 && hour < 18) greetingText = "Добрый день";
-      else if (hour >= 18 && hour < 23) greetingText = "Добрый вечер";
-      else greetingText = "Доброй ночи";
-
+      let greetingText = hour >= 5 && hour < 12 ? "Доброе утро" : hour >= 12 && hour < 18 ? "Добрый день" : hour >= 18 && hour < 23 ? "Добрый вечер" : "Доброй ночи";
       document.getElementById('greeting').innerText = greetingText;
     }
     setInterval(updateClockAndGreeting, 1000);
@@ -438,40 +254,168 @@
 
     // --- 2. ПОГОДА ---
     fetch('https://api.open-meteo.com/v1/forecast?latitude=55.1644&longitude=61.4368&current_weather=true')
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         const temp = Math.round(data.current_weather.temperature);
         const code = data.current_weather.weathercode;
-        let icon = '🌡️';
-        if (code === 0) icon = '☀️';
-        else if (code >= 1 && code <= 3) icon = '🌤️';
-        else if (code === 45 || code === 48) icon = '🌫️';
-        else if (code >= 51 && code <= 67) icon = '🌧️';
-        else if (code >= 71 && code <= 77) icon = '🌨️';
-        else if (code >= 80 && code <= 82) icon = '🌧️';
-        else if (code >= 85 && code <= 86) icon = '🌨️';
-        else if (code >= 95) icon = '⛈️';
+        let icon = code === 0 ? '☀️' : (code >= 1 && code <= 3) ? '🌤️' : (code >= 71 && code <= 77) ? '🌨️' : (code >= 95) ? '⛈️' : '🌧️';
         document.getElementById('weather').innerHTML = `${icon} ${temp}°C`;
-      })
-      .catch(() => { document.getElementById('weather').innerText = 'Нет данных'; });
+      }).catch(() => { document.getElementById('weather').innerText = 'Нет данных'; });
 
     // --- 3. БЛОКНОТ ---
     const notesArea = document.getElementById('notes');
     notesArea.value = localStorage.getItem('sadist_notes') || '';
     notesArea.addEventListener('input', () => { localStorage.setItem('sadist_notes', notesArea.value); });
 
-    // --- 4. ЭФФЕКТ ПРОЖЕКТОРА НА КНОПКАХ (Spotlight) ---
+    // --- 4. ПРОЖЕКТОР НА КНОПКАХ ---
     document.querySelectorAll('.link-card').forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
       });
     });
 
-    // --- 5. ЖИВОЙ ФОН (Искры) ---
+    // --- 5. ТАЙМЕР ПОМОДОРО ---
+    let pomoTime = 25 * 60; // 25 минут в секундах
+    let pomoTimer = null;
+    let isPomoRunning = false;
+    const pomoBtn = document.getElementById('pomo-btn');
+
+    function updatePomoDisplay() {
+      const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+      const s = (pomoTime % 60).toString().padStart(2, '0');
+      pomoBtn.innerText = `⏸ Фокус (${m}:${s})`;
+    }
+
+    pomoBtn.addEventListener('click', () => {
+      if (isPomoRunning) {
+        clearInterval(pomoTimer);
+        pomoBtn.classList.remove('active');
+        pomoBtn.innerText = `▶ Фокус (${Math.floor(pomoTime/60).toString().padStart(2, '0')}:${(pomoTime%60).toString().padStart(2, '0')})`;
+        isPomoRunning = false;
+      } else {
+        isPomoRunning = true;
+        pomoBtn.classList.add('active');
+        updatePomoDisplay();
+        pomoTimer = setInterval(() => {
+          pomoTime--;
+          updatePomoDisplay();
+          if (pomoTime <= 0) {
+            clearInterval(pomoTimer);
+            isPomoRunning = false;
+            pomoTime = 25 * 60;
+            pomoBtn.classList.remove('active');
+            pomoBtn.innerText = `▶ Фокус (25:00)`;
+            playBeep(); // Звук окончания
+            alert("Время фокуса вышло! Пора отдохнуть.");
+          }
+        }, 1000);
+      }
+    });
+
+    // --- 6. ФОНОВЫЙ ШУМ (Генератор) ---
+    const noiseBtn = document.getElementById('noise-btn');
+    let audioCtx = null;
+    let noiseSource = null;
+    let isNoisePlaying = false;
+
+    noiseBtn.addEventListener('click', () => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      if (isNoisePlaying) {
+        noiseSource.stop();
+        noiseBtn.classList.remove('active');
+        noiseBtn.innerText = '☁️';
+        isNoisePlaying = false;
+      } else {
+        // Генерация коричневого шума (похож на дождь)
+        const bufferSize = audioCtx.sampleRate * 2; 
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          data[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = data[i];
+          data[i] *= 3.5; 
+        }
+        noiseSource = audioCtx.createBufferSource();
+        noiseSource.buffer = buffer;
+        noiseSource.loop = true;
+        
+        // Фильтр, чтобы звук был мягче
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 1000;
+
+        noiseSource.connect(filter);
+        filter.connect(audioCtx.destination);
+        noiseSource.start();
+        
+        noiseBtn.classList.add('active');
+        noiseBtn.innerText = '🌧️';
+        isNoisePlaying = true;
+      }
+    });
+
+    // Звук для таймера
+    function playBeep() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1);
+    }
+
+    // --- 7. ШЛЕЙФ ЗА КУРСОРОМ ---
+    const cursorCanvas = document.getElementById('cursor-canvas');
+    const cursorCtx = cursorCanvas.getContext('2d');
+    let cWidth, cHeight;
+    let trail = [];
+
+    function resizeCursor() {
+      cWidth = cursorCanvas.width = window.innerWidth;
+      cHeight = cursorCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCursor);
+    resizeCursor();
+
+    window.addEventListener('mousemove', (e) => {
+      trail.push({
+        x: e.clientX,
+        y: e.clientY,
+        alpha: 1,
+        size: Math.random() * 3 + 1
+      });
+    });
+
+    function animateCursor() {
+      cursorCtx.clearRect(0, 0, cWidth, cHeight);
+      for (let i = 0; i < trail.length; i++) {
+        let p = trail[i];
+        p.alpha -= 0.02; // Затухание
+        if (p.alpha <= 0) {
+          trail.splice(i, 1);
+          i--;
+          continue;
+        }
+        cursorCtx.fillStyle = `rgba(255, 26, 26, ${p.alpha})`;
+        cursorCtx.beginPath();
+        cursorCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        cursorCtx.fill();
+      }
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // --- 8. ЖИВОЙ ФОН (Искры) ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -501,14 +445,14 @@
         if (this.x > width) this.x = 0;
       }
       draw() {
-        ctx.fillStyle = `rgba(255, 26, 26, ${this.opacity})`; // Алее искры
+        ctx.fillStyle = `rgba(255, 26, 26, ${this.opacity})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    for (let i = 0; i < 60; i++) { particles.push(new Particle()); } // Чуть больше искр
+    for (let i = 0; i < 60; i++) { particles.push(new Particle()); }
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
@@ -520,6 +464,5 @@
     }
     animate();
   </script>
-
 </body>
 </html>
