@@ -7,19 +7,24 @@
   <title>SADIST</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
   
+  <!-- Подключаем премиальный шрифт Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-color: #050505;
+      --bg-color: #030303;
       --card-bg: rgba(255, 255, 255, 0.02);
-      --card-border: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.05);
       --text-main: #ffffff;
       --text-muted: #888888;
-      --accent-red: #ff3333;
-      --accent-glow: rgba(255, 51, 51, 0.4);
+      --accent-red: #ff1a1a;
+      --accent-glow: rgba(255, 26, 26, 0.5);
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-main);
       display: flex;
@@ -31,6 +36,12 @@
       padding: 40px 20px;
       box-sizing: border-box;
       overflow-y: auto;
+      /* Неоновая сетка на фоне */
+      background-image: 
+        linear-gradient(rgba(255, 26, 26, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 26, 26, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-position: center center;
     }
 
     #bg-canvas {
@@ -50,7 +61,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 700px; /* Немного сузил, чтобы сетка из 6 кнопок смотрелась идеально */
+      max-width: 700px;
     }
 
     .header {
@@ -60,26 +71,25 @@
     }
 
     #greeting {
-      color: #cccccc;
-      font-size: 18px;
+      color: var(--text-muted);
+      font-size: 16px;
       font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 6px;
-      margin-bottom: 10px;
+      letter-spacing: 8px; /* Еще шире */
+      margin-bottom: 8px;
       display: block;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     .header h1 {
-      font-size: 52px;
+      font-size: 56px;
       font-weight: 800;
       margin: 0;
-      letter-spacing: -1px;
-      background: linear-gradient(90deg, #ffffff, #ff3333);
+      letter-spacing: -2px;
+      background: linear-gradient(180deg, #ffffff 0%, #ff1a1a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-transform: uppercase;
-      line-height: 1.1;
+      line-height: 1;
     }
 
     .info-container {
@@ -91,21 +101,21 @@
     }
 
     #time {
-      font-size: 42px;
+      font-size: 40px;
       font-weight: 700;
-      letter-spacing: 4px;
+      letter-spacing: 2px;
       color: var(--accent-red);
-      text-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 20px var(--accent-glow);
     }
 
     #weather {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       color: var(--text-main);
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      padding: 8px 16px;
-      border-radius: 16px;
+      padding: 6px 14px;
+      border-radius: 12px;
       backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
@@ -113,11 +123,12 @@
     }
 
     #date {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-muted);
       letter-spacing: 2px;
       margin-top: 8px;
       text-transform: capitalize;
+      font-weight: 500;
     }
 
     .search-box {
@@ -132,17 +143,18 @@
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 30px;
-      padding: 8px 25px;
+      border-radius: 20px; /* Чуть менее круглые */
+      padding: 6px 20px;
       box-sizing: border-box;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
     }
 
     .search-box form:focus-within {
       border-color: var(--accent-red);
-      box-shadow: 0 0 20px var(--accent-glow);
+      box-shadow: 0 0 25px rgba(255, 26, 26, 0.2);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .search-box input {
@@ -151,6 +163,7 @@
       border: none;
       color: #fff;
       font-size: 16px;
+      font-family: inherit;
       padding: 12px 0;
       outline: none;
     }
@@ -163,17 +176,12 @@
       background: transparent;
       border: none;
       color: var(--accent-red);
-      font-size: 22px;
+      font-size: 20px;
       cursor: pointer;
       padding: 0 10px;
       transition: transform 0.2s;
     }
 
-    .search-box button:hover {
-      transform: scale(1.1);
-    }
-
-    /* Красивое расположение кнопок */
     .links-wrapper {
       display: flex;
       flex-wrap: wrap;
@@ -184,7 +192,9 @@
       margin-bottom: 50px;
     }
 
+    /* Эффект стеклянных кнопок с прожектором */
     a.link-card {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -196,38 +206,65 @@
       color: var(--text-main);
       text-decoration: none;
       padding: 30px 20px;
-      border-radius: 20px;
-      font-size: 16px;
-      font-weight: 500;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
       text-align: center;
       width: 160px; 
       box-sizing: border-box;
+      overflow: hidden; /* Чтобы прожектор не выходил за края */
+    }
+
+    /* Слой для эффекта прожектора */
+    a.link-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(
+        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 26, 26, 0.15),
+        transparent 40%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    a.link-card:hover::before {
+      opacity: 1;
     }
 
     a.link-card svg {
-      width: 38px;
-      height: 38px;
+      position: relative;
+      z-index: 1;
+      width: 36px;
+      height: 36px;
       margin-bottom: 15px;
       fill: var(--text-main);
       transition: all 0.3s ease;
     }
 
+    a.link-card span {
+      position: relative;
+      z-index: 1;
+    }
+
     a.link-card:hover {
-      background: rgba(255, 51, 51, 0.05);
-      border-color: var(--accent-red);
-      transform: translateY(-6px);
-      box-shadow: 0 15px 35px -10px var(--accent-glow);
+      border-color: rgba(255, 26, 26, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px -10px rgba(255, 26, 26, 0.15);
       color: var(--accent-red);
     }
 
     a.link-card:hover svg {
       fill: var(--accent-red);
-      transform: scale(1.15);
-      filter: drop-shadow(0 0 10px var(--accent-glow));
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 12px rgba(255, 26, 26, 0.6));
     }
 
-    /* Блокнот */
+    /* Заметки */
     .notes-section {
       width: 100%;
       animation: fadeInUp 0.8s ease-out;
@@ -237,12 +274,12 @@
     .notes-section label {
       display: block;
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 2px;
       margin-bottom: 12px;
-      margin-left: 15px;
-      font-weight: 600;
+      margin-left: 10px;
+      font-weight: 700;
     }
 
     textarea {
@@ -250,12 +287,12 @@
       height: 130px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 25px;
+      border-radius: 20px;
+      padding: 20px;
       color: var(--text-main);
       font-family: inherit;
-      font-size: 16px;
-      line-height: 1.5;
+      font-size: 15px;
+      line-height: 1.6;
       resize: vertical;
       outline: none;
       box-sizing: border-box;
@@ -266,11 +303,26 @@
 
     textarea:focus {
       border-color: var(--accent-red);
-      box-shadow: 0 0 20px var(--accent-glow);
+      box-shadow: 0 0 20px rgba(255, 26, 26, 0.15);
     }
 
     textarea::placeholder {
       color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Кастомный скроллбар для заметок */
+    textarea::-webkit-scrollbar {
+      width: 6px;
+    }
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    textarea::-webkit-scrollbar-thumb {
+      background: rgba(255, 26, 26, 0.5);
+      border-radius: 10px;
+    }
+    textarea::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-red);
     }
 
     @keyframes fadeInDown {
@@ -284,8 +336,8 @@
     }
 
     @media (max-width: 600px) {
-      .header h1 { font-size: 40px; }
-      #greeting { font-size: 15px; letter-spacing: 4px; }
+      .header h1 { font-size: 42px; }
+      #greeting { font-size: 13px; letter-spacing: 5px; }
       #time { font-size: 32px; }
       .info-container { flex-direction: column; gap: 10px; }
       .links-wrapper { gap: 15px; }
@@ -293,8 +345,10 @@
         width: calc(50% - 15px); 
         padding: 20px 10px; 
       }
-      a.link-card svg { width: 32px; height: 32px; }
+      a.link-card svg { width: 30px; height: 30px; }
       .search-box { max-width: 100%; }
+      /* На телефонах прожектор отключаем, чтобы не лагало */
+      a.link-card::before { display: none; } 
     }
   </style>
 </head>
@@ -316,7 +370,7 @@
 
     <div class="search-box">
       <form action="https://duckduckgo.com/" method="GET" target="_blank">
-        <input type="text" name="q" placeholder="Безопасный поиск (DuckDuckGo)..." required autocomplete="off">
+        <input type="text" name="q" placeholder="Поиск (DuckDuckGo)..." required autocomplete="off">
         <button type="submit">🔍</button>
       </form>
     </div>
@@ -324,38 +378,37 @@
     <div class="links-wrapper">
       <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        YouTube
+        <span>YouTube</span>
       </a>
       
       <a href="https://music.yandex.ru" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"/></svg>
-        Музыка
+        <span>Музыка</span>
       </a>
       
       <a href="https://vk.com" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M21.579 6.855c.14-.465 0-.806-.662-.806h-2.194c-.554 0-.81.294-.949.618 0 0-1.108 2.699-2.678 4.45-.508.508-.738.67-1.016.67-.138 0-.337-.162-.337-.627V6.855c0-.557-.16-.806-.62-.806h-3.45c-.346 0-.554.257-.554.501 0 .524.785.644.866 2.112v3.187c0 .694-.126.82-.404.82-.738 0-2.533-2.708-3.597-5.81-.208-.604-.417-.85-.974-.85H2.872c-.623 0-.747.294-.747.618 0 .577.738 3.42 3.42 7.184 1.79 2.598 4.304 4.004 6.59 4.004 1.374 0 1.543-.31 1.543-.842v-1.94c0-.612.128-.734.56-.734.316 0 .86.16 2.128 1.382 1.448 1.448 1.686 2.134 2.501 2.134h2.194c.623 0 .935-.31.748-.92-.204-.609-1.328-1.916-2.451-3.17-.338-.4-.845-.827-1-.96-.209-.27-.15-.389 0-.632 0 0 1.772-2.497 2.46-5.166z"/></svg>
-        ВКонтакте
+        <span>ВКонтакте</span>
       </a>
 
       <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        Telegram
+        <span>Telegram</span>
       </a>
 
       <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
-        DeepSeek
+        <span>DeepSeek</span>
       </a>
 
-      <!-- Новая кнопка для 100points -->
       <a href="https://lk.100points.ru/student/dashboard" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M13 3L4 14h7v7l9-11h-7V3z"/></svg>
-        100points
+        <span>100points</span>
       </a>
     </div>
 
     <div class="notes-section">
-      <label>Быстрые заметки (сохраняются авто)</label>
+      <label>Быстрые заметки</label>
       <textarea id="notes" placeholder="Пиши здесь свои мысли..."></textarea>
     </div>
 
@@ -383,14 +436,13 @@
     setInterval(updateClockAndGreeting, 1000);
     updateClockAndGreeting();
 
-    // --- 2. ПОГОДА В ЧЕЛЯБИНСКЕ ---
+    // --- 2. ПОГОДА ---
     fetch('https://api.open-meteo.com/v1/forecast?latitude=55.1644&longitude=61.4368&current_weather=true')
       .then(response => response.json())
       .then(data => {
         const temp = Math.round(data.current_weather.temperature);
         const code = data.current_weather.weathercode;
         let icon = '🌡️';
-
         if (code === 0) icon = '☀️';
         else if (code >= 1 && code <= 3) icon = '🌤️';
         else if (code === 45 || code === 48) icon = '🌫️';
@@ -399,21 +451,27 @@
         else if (code >= 80 && code <= 82) icon = '🌧️';
         else if (code >= 85 && code <= 86) icon = '🌨️';
         else if (code >= 95) icon = '⛈️';
-
         document.getElementById('weather').innerHTML = `${icon} ${temp}°C`;
       })
-      .catch(() => {
-        document.getElementById('weather').innerText = 'Нет данных';
-      });
+      .catch(() => { document.getElementById('weather').innerText = 'Нет данных'; });
 
     // --- 3. БЛОКНОТ ---
     const notesArea = document.getElementById('notes');
     notesArea.value = localStorage.getItem('sadist_notes') || '';
-    notesArea.addEventListener('input', () => {
-      localStorage.setItem('sadist_notes', notesArea.value);
+    notesArea.addEventListener('input', () => { localStorage.setItem('sadist_notes', notesArea.value); });
+
+    // --- 4. ЭФФЕКТ ПРОЖЕКТОРА НА КНОПКАХ (Spotlight) ---
+    document.querySelectorAll('.link-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
     });
 
-    // --- 4. ЖИВОЙ ФОН (Алые искры) ---
+    // --- 5. ЖИВОЙ ФОН (Искры) ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -443,16 +501,14 @@
         if (this.x > width) this.x = 0;
       }
       draw() {
-        ctx.fillStyle = `rgba(255, 51, 51, ${this.opacity})`;
+        ctx.fillStyle = `rgba(255, 26, 26, ${this.opacity})`; // Алее искры
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    for (let i = 0; i < 50; i++) {
-      particles.push(new Particle());
-    }
+    for (let i = 0; i < 60; i++) { particles.push(new Particle()); } // Чуть больше искр
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
