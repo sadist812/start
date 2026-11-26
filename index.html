@@ -28,9 +28,9 @@
       justify-content: center;
       min-height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 40px 20px;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow-y: auto; /* Разрешаем прокрутку, так как добавились заметки */
     }
 
     #bg-canvas {
@@ -59,6 +59,16 @@
       animation: fadeInDown 0.8s ease-out;
     }
 
+    /* Умное приветствие */
+    #greeting {
+      color: var(--text-muted);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
     .header h1 {
       font-size: 42px;
       font-weight: 700;
@@ -70,16 +80,34 @@
       text-transform: uppercase;
     }
 
-    .clock-container {
+    /* Часы, дата и погода */
+    .info-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
       margin-top: 10px;
-      color: var(--accent-red);
     }
-    
+
     #time {
       font-size: 28px;
       font-weight: bold;
       letter-spacing: 2px;
+      color: var(--accent-red);
       text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    #weather {
+      font-size: 16px;
+      color: var(--text-main);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     #date {
@@ -149,9 +177,10 @@
       gap: 20px;
       width: 100%;
       animation: fadeInUp 0.8s ease-out;
+      margin-bottom: 40px;
     }
 
-    a {
+    a.link-card {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -170,27 +199,70 @@
       text-align: center;
     }
 
-    /* Стили для SVG иконок */
-    a svg {
+    a.link-card svg {
       width: 36px;
       height: 36px;
       margin-bottom: 15px;
-      fill: var(--text-main); /* По умолчанию белые */
+      fill: var(--text-main);
       transition: all 0.3s ease;
     }
 
-    a:hover {
+    a.link-card:hover {
       background: rgba(255, 51, 51, 0.05);
       border-color: var(--accent-red);
       transform: translateY(-5px);
       box-shadow: 0 10px 30px -10px var(--accent-glow);
-      color: var(--accent-red); /* Текст становится алым */
+      color: var(--accent-red);
     }
 
-    a:hover svg {
-      fill: var(--accent-red); /* Иконка становится алой */
+    a.link-card:hover svg {
+      fill: var(--accent-red);
       transform: scale(1.15);
-      filter: drop-shadow(0 0 8px var(--accent-glow)); /* Свечение иконки */
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+
+    /* Блокнот */
+    .notes-section {
+      width: 100%;
+      animation: fadeInUp 0.8s ease-out;
+      margin-bottom: 20px;
+    }
+
+    .notes-section label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 15px;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--accent-red);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.2);
     }
 
     @keyframes fadeInDown {
@@ -206,9 +278,10 @@
     @media (max-width: 600px) {
       .header h1 { font-size: 32px; }
       .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-      a { padding: 20px 10px; font-size: 14px; }
-      a svg { width: 30px; height: 30px; }
+      a.link-card { padding: 20px 10px; font-size: 14px; }
+      a.link-card svg { width: 30px; height: 30px; }
       .search-box { max-width: 90%; }
+      .info-container { flex-direction: column; gap: 5px; }
     }
   </style>
 </head>
@@ -218,11 +291,16 @@
 
   <div class="content">
     <div class="header">
+      <!-- Умное приветствие -->
+      <span id="greeting">Загрузка...</span>
       <h1>SADIST</h1>
-      <div class="clock-container">
+      
+      <div class="info-container">
         <div id="time">00:00:00</div>
-        <div id="date">Загрузка...</div>
+        <!-- Погода -->
+        <div id="weather">Загрузка...</div>
       </div>
+      <div id="date">Загрузка...</div>
     </div>
 
     <div class="search-box">
@@ -233,52 +311,98 @@
     </div>
 
     <div class="grid">
-      <!-- YouTube -->
-      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         YouTube
       </a>
       
-      <!-- Яндекс Музыка (Иконка наушников) -->
-      <a href="https://music.yandex.ru" target="_blank" rel="noopener noreferrer">
+      <a href="https://music.yandex.ru" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"/></svg>
         Музыка
       </a>
       
-      <!-- ВКонтакте -->
-      <a href="https://vk.com" target="_blank" rel="noopener noreferrer">
+      <a href="https://vk.com" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M21.579 6.855c.14-.465 0-.806-.662-.806h-2.194c-.554 0-.81.294-.949.618 0 0-1.108 2.699-2.678 4.45-.508.508-.738.67-1.016.67-.138 0-.337-.162-.337-.627V6.855c0-.557-.16-.806-.62-.806h-3.45c-.346 0-.554.257-.554.501 0 .524.785.644.866 2.112v3.187c0 .694-.126.82-.404.82-.738 0-2.533-2.708-3.597-5.81-.208-.604-.417-.85-.974-.85H2.872c-.623 0-.747.294-.747.618 0 .577.738 3.42 3.42 7.184 1.79 2.598 4.304 4.004 6.59 4.004 1.374 0 1.543-.31 1.543-.842v-1.94c0-.612.128-.734.56-.734.316 0 .86.16 2.128 1.382 1.448 1.448 1.686 2.134 2.501 2.134h2.194c.623 0 .935-.31.748-.92-.204-.609-1.328-1.916-2.451-3.17-.338-.4-.845-.827-1-.96-.209-.27-.15-.389 0-.632 0 0 1.772-2.497 2.46-5.166z"/></svg>
         ВКонтакте
       </a>
 
-      <!-- Telegram -->
-      <a href="https://t.me" target="_blank" rel="noopener noreferrer">
+      <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         Telegram
       </a>
 
-      <!-- DeepSeek (Иконка нейросети/искры) -->
-      <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+      <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer" class="link-card">
         <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
         DeepSeek
       </a>
     </div>
+
+    <!-- Блокнот -->
+    <div class="notes-section">
+      <label>Быстрые заметки (сохраняются авто)</label>
+      <textarea id="notes" placeholder="Пиши здесь свои мысли, пароли или списки дел..."></textarea>
+    </div>
+
   </div>
 
   <script>
-    // --- 1. ЧАСЫ И ДАТА (Челябинск, UTC+5) ---
-    function updateClock() {
+    // --- 1. УМНОЕ ПРИВЕТСТВИЕ И ЧАСЫ (Челябинск, UTC+5) ---
+    function updateClockAndGreeting() {
       const now = new Date();
       const optionsTime = { timeZone: 'Asia/Yekaterinburg', hour: '2-digit', minute: '2-digit', second: '2-digit' };
       const optionsDate = { timeZone: 'Asia/Yekaterinburg', weekday: 'long', day: 'numeric', month: 'long' };
       
       document.getElementById('time').textContent = now.toLocaleTimeString('ru-RU', optionsTime);
       document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', optionsDate);
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
 
-    // --- 2. ЖИВОЙ ФОН (Алые искры) ---
+      // Логика приветствия
+      const hour = parseInt(new Date().toLocaleString('en-US', { timeZone: 'Asia/Yekaterinburg', hour: 'numeric', hour12: false }));
+      let greetingText = "";
+      if (hour >= 5 && hour < 12) greetingText = "Доброе утро";
+      else if (hour >= 12 && hour < 18) greetingText = "Добрый день";
+      else if (hour >= 18 && hour < 23) greetingText = "Добрый вечер";
+      else greetingText = "Доброй ночи";
+
+      document.getElementById('greeting').innerText = greetingText;
+    }
+    setInterval(updateClockAndGreeting, 1000);
+    updateClockAndGreeting();
+
+    // --- 2. ПОГОДА В ЧЕЛЯБИНСКЕ (Open-Meteo, приватно) ---
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=55.1644&longitude=61.4368&current_weather=true')
+      .then(response => response.json())
+      .then(data => {
+        const temp = Math.round(data.current_weather.temperature);
+        const code = data.current_weather.weathercode;
+        let icon = '🌡️';
+
+        // Расшифровка кодов погоды
+        if (code === 0) icon = '☀️';
+        else if (code >= 1 && code <= 3) icon = '🌤️';
+        else if (code === 45 || code === 48) icon = '🌫️';
+        else if (code >= 51 && code <= 67) icon = '🌧️';
+        else if (code >= 71 && code <= 77) icon = '🌨️';
+        else if (code >= 80 && code <= 82) icon = '🌧️';
+        else if (code >= 85 && code <= 86) icon = '🌨️';
+        else if (code >= 95) icon = '⛈️';
+
+        document.getElementById('weather').innerHTML = `${icon} ${temp}°C`;
+      })
+      .catch(() => {
+        document.getElementById('weather').innerText = 'Нет данных';
+      });
+
+    // --- 3. БЛОКНОТ (Сохранение в localStorage) ---
+    const notesArea = document.getElementById('notes');
+    // Загружаем сохраненный текст при открытии
+    notesArea.value = localStorage.getItem('sadist_notes') || '';
+    
+    // Сохраняем при каждом вводе символа
+    notesArea.addEventListener('input', () => {
+      localStorage.setItem('sadist_notes', notesArea.value);
+    });
+
+    // --- 4. ЖИВОЙ ФОН (Алые искры) ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
