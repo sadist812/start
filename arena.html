@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARENA | Киберспортивный клуб</title>
+  <title>ARENA | Cyber Club</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Share+Tech+Mono&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0a0a0c;
-      --bg-card: #131316;
-      --text-main: #ffffff;
-      --text-muted: #a0a0a8; /* Сделали светлее для читаемости */
-      --neon-red: #ff1a1a;
-      --neon-red-glow: rgba(255, 26, 26, 0.6);
+      --bg-dark: #050705;
+      --bg-card: #0a0f0a;
+      --text-main: #e0ffe0;
+      --text-muted: #6b8f6b;
+      --neon-green: #00ff41;
+      --neon-green-glow: rgba(0, 255, 65, 0.6);
     }
 
     * { box-sizing: border-box; scroll-behavior: smooth; }
@@ -24,20 +24,52 @@
       font-family: 'Roboto', sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-main);
-      background-image: radial-gradient(circle at 50% 0%, rgba(255, 26, 26, 0.15) 0%, transparent 50%);
-      background-repeat: no-repeat;
       overflow-x: hidden;
+      cursor: none; /* Скрываем стандартный курсор на ПК */
     }
 
-    /* ПЛАВНОЕ ПОЯВЛЕНИЕ БЛОКОВ */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+    /* КАСТОМНЫЙ КУРСОР */
+    #custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--neon-green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+      box-shadow: 0 0 10px var(--neon-green-glow);
+      display: none; /* Включается через JS если это ПК */
     }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+
+    /* МАТРИЧНЫЙ ФОН */
+    #matrix-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.15; /* Делаем фон еле заметным */
+    }
+
+    /* БЕГУЩАЯ СТРОКА */
+    .ticker-wrapper {
+      background: var(--neon-green);
+      color: #000;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+      padding: 5px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      z-index: 101;
+    }
+    .ticker {
+      display: inline-block;
+      animation: ticker 15s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* ШАПКА */
@@ -46,12 +78,12 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 5%;
-      background: rgba(10, 10, 12, 0.85);
+      background: rgba(5, 7, 5, 0.85);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(0, 255, 65, 0.2);
     }
 
     .logo {
@@ -62,8 +94,7 @@
       color: var(--text-main);
       text-transform: uppercase;
     }
-
-    .logo span { color: var(--neon-red); }
+    .logo span { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green-glow); }
 
     nav a {
       color: var(--text-main);
@@ -74,335 +105,272 @@
       font-size: 15px;
       position: relative;
       padding-bottom: 5px;
+      font-family: 'Share Tech Mono', monospace; /* Хакерский шрифт для меню */
     }
-
-    /* Подсветка активного раздела */
     nav a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: var(--neon-red);
-      transition: width 0.3s ease;
-      box-shadow: 0 0 10px var(--neon-red);
+      content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px;
+      background: var(--neon-green); transition: width 0.3s ease; box-shadow: 0 0 10px var(--neon-green);
     }
-
-    nav a:hover, nav a.active { color: var(--neon-red); }
+    nav a:hover, nav a.active { color: var(--neon-green); }
     nav a.active::after { width: 100%; }
 
     /* ГЛАВНЫЙ ЭКРАН */
     .hero {
       text-align: center;
-      padding: 140px 20px;
+      padding: 120px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
 
-    .hero h1 {
+    /* ГЛИТЧ ЭФФЕКТ */
+    .glitch {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(40px, 8vw, 72px);
+      font-size: clamp(40px, 8vw, 80px);
       font-weight: 900;
       margin: 0;
-      line-height: 1.1;
       text-transform: uppercase;
-      background: linear-gradient(90deg, #ffffff, var(--neon-red));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(255, 26, 26, 0.3);
+      position: relative;
+      color: var(--text-main);
+      text-shadow: 0 0 20px rgba(0,255,65,0.3);
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg-dark);
+    }
+    .glitch::before {
+      left: 3px; text-shadow: -2px 0 var(--neon-green);
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+    .glitch::after {
+      left: -3px; text-shadow: -2px 0 #00ffff;
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim 2.5s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-anim {
+      0% { clip: rect(10px, 9999px, 83px, 0); }
+      20% { clip: rect(62px, 9999px, 14px, 0); }
+      40% { clip: rect(33px, 9999px, 91px, 0); }
+      60% { clip: rect(89px, 9999px, 22px, 0); }
+      80% { clip: rect(44px, 9999px, 76px, 0); }
+      100% { clip: rect(12px, 9999px, 55px, 0); }
+    }
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(65px, 9999px, 100px, 0); }
+      20% { clip: rect(12px, 9999px, 88px, 0); }
+      40% { clip: rect(54px, 9999px, 23px, 0); }
+      60% { clip: rect(98px, 9999px, 55px, 0); }
+      80% { clip: rect(32px, 9999px, 77px, 0); }
+      100% { clip: rect(75px, 9999px, 11px, 0); }
     }
 
     .hero p {
-      font-size: 20px;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 20px 0 40px;
-      line-height: 1.7; /* Улучшили межстрочный интервал */
+      font-size: 20px; color: var(--text-muted); max-width: 600px;
+      margin: 20px 0 40px; line-height: 1.7; font-family: 'Share Tech Mono', monospace;
     }
 
     /* Кнопки */
     .btn-main {
-      background-color: var(--neon-red);
-      color: #fff;
-      text-decoration: none;
-      padding: 18px 40px;
-      font-size: 18px;
-      font-weight: 700;
-      border-radius: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px var(--neon-red-glow);
-      border: 2px solid var(--neon-red);
-      cursor: pointer;
-      animation: pulse-red 2s infinite;
+      background-color: transparent; color: var(--neon-green);
+      text-decoration: none; padding: 18px 40px; font-size: 18px;
+      font-weight: 700; border-radius: 4px; text-transform: uppercase;
+      letter-spacing: 2px; transition: all 0.3s ease;
+      border: 2px solid var(--neon-green); cursor: none;
+      font-family: 'Share Tech Mono', monospace; position: relative; overflow: hidden;
+      box-shadow: inset 0 0 10px var(--neon-green-glow), 0 0 20px var(--neon-green-glow);
     }
-
-    @keyframes pulse-red {
-      0% { box-shadow: 0 0 10px var(--neon-red-glow); }
-      50% { box-shadow: 0 0 30px var(--neon-red-glow); }
-      100% { box-shadow: 0 0 10px var(--neon-red-glow); }
-    }
-
     .btn-main:hover {
-      background-color: transparent;
-      color: var(--neon-red);
-      animation: none;
-      transform: translateY(-3px);
+      background-color: var(--neon-green); color: #000;
+      box-shadow: 0 0 40px var(--neon-green-glow);
     }
 
     /* Секции */
-    section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+    section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
     .section-title {
-      text-align: center;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 36px;
-      margin-bottom: 60px;
-      text-transform: uppercase;
+      text-align: center; font-family: 'Montserrat', sans-serif;
+      font-size: 36px; margin-bottom: 50px; text-transform: uppercase;
+      color: var(--neon-green); text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
     }
 
-    /* ГАЛЕРЕЯ (СТИЛИЗОВАННЫЕ ФОТО) */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
+    /* ГАЛЕРЕЯ */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .gallery-item {
-      height: 280px;
-      border-radius: 16px;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
+      height: 280px; border-radius: 8px; overflow: hidden; position: relative;
+      border: 1px solid rgba(0, 255, 65, 0.2);
+      /* ЗАПАСНОЙ ФОН, ЕСЛИ КАРТИНКА НЕ ЗАГРУЗИТСЯ */
+      background: linear-gradient(45deg, #0a0f0a, #112211);
     }
     .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: all 0.5s ease;
-      filter: grayscale(80%) contrast(1.2) brightness(0.8); /* Стилизация под ночной клуб */
+      width: 100%; height: 100%; object-fit: cover; transition: all 0.5s ease;
+      filter: sepia(100%) hue-rotate(60deg) saturate(300%) contrast(1.2); /* Красим фото в зеленый */
     }
-    /* Красный неоновый оверлей */
-    .gallery-item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 26, 26, 0.2);
-      mix-blend-mode: overlay;
-      z-index: 1;
-      transition: all 0.5s ease;
-    }
-    
     .gallery-item:hover img {
-      transform: scale(1.1);
-      filter: grayscale(0%) contrast(1) brightness(1);
+      transform: scale(1.1); filter: none; /* При наведении возвращаем цвета */
     }
-    .gallery-item:hover::before {
-      background: rgba(255, 26, 26, 0);
+    /* Хакерские уголки */
+    .gallery-item::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, var(--neon-green) 2px, transparent 2px) 0 0,
+        linear-gradient(to bottom, var(--neon-green) 2px, transparent 2px) 0 0,
+        linear-gradient(to left, var(--neon-green) 2px, transparent 2px) 100% 0,
+        linear-gradient(to bottom, var(--neon-green) 2px, transparent 2px) 100% 0,
+        linear-gradient(to right, var(--neon-green) 2px, transparent 2px) 0 100%,
+        linear-gradient(to top, var(--neon-green) 2px, transparent 2px) 0 100%,
+        linear-gradient(to left, var(--neon-green) 2px, transparent 2px) 100% 100%,
+        linear-gradient(to top, var(--neon-green) 2px, transparent 2px) 100% 100%;
+      background-repeat: no-repeat; background-size: 20px 20px; pointer-events: none;
     }
 
-    /* ТУРНИРЫ */
-    .tournament-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+    /* ТУРНИРЫ (3D Tilt) */
+    .tournament-list { display: flex; flex-direction: column; gap: 15px; }
     .tournament-card {
-      background: linear-gradient(90deg, var(--bg-card) 0%, rgba(255,26,26,0.05) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 25px 30px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.3s;
+      background: var(--bg-card); border: 1px solid rgba(0, 255, 65, 0.1);
+      padding: 25px 30px; border-radius: 8px; display: flex;
+      justify-content: space-between; align-items: center;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      transform-style: preserve-3d; /* Для 3D эффекта */
     }
     .tournament-card:hover {
-      border-color: var(--neon-red);
-      box-shadow: 0 5px 20px rgba(255, 26, 26, 0.15);
-      transform: translateX(10px);
+      border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
     }
     .t-info h4 { margin: 0 0 8px 0; font-size: 20px; font-family: 'Montserrat', sans-serif; }
-    .t-info span { color: var(--text-muted); font-size: 15px; }
-    .t-prize { font-size: 26px; font-weight: 700; color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red-glow); }
+    .t-info span { color: var(--text-muted); font-size: 15px; font-family: 'Share Tech Mono', monospace; }
+    .t-prize { font-size: 26px; font-weight: 700; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green-glow); font-family: 'Share Tech Mono', monospace; }
 
     /* ТАРИФЫ */
-    .cards-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-    }
-
+    .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
     .card {
-      background: linear-gradient(180deg, var(--bg-card) 0%, #0d0d10 100%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 40px 30px;
-      text-align: center;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
+      background: var(--bg-card); border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 12px; padding: 40px 30px; text-align: center;
+      transition: all 0.3s; position: relative; transform-style: preserve-3d;
     }
-
     .card.vip {
-      border-color: var(--neon-red);
-      box-shadow: 0 0 30px rgba(255, 26, 26, 0.15);
-      transform: scale(1.02);
+      border-color: var(--neon-green); box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
     }
-    
     .card.vip::after {
-      content: "ВЫБОР ИГРОКОВ";
-      position: absolute;
-      top: 20px; right: -40px;
-      background: var(--neon-red);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 6px 45px;
-      transform: rotate(45deg);
-      letter-spacing: 1px;
-      box-shadow: 0 0 10px rgba(255,26,26,0.5);
+      content: "ВЫБОР ИГРОКОВ"; position: absolute; top: 20px; right: -40px;
+      background: var(--neon-green); color: #000; font-size: 10px; font-weight: 900;
+      padding: 6px 45px; transform: rotate(45deg); letter-spacing: 1px;
     }
-
     .card:hover {
-      transform: translateY(-10px) scale(1.02);
-      border-color: rgba(255, 26, 26, 0.5);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255,26,26,0.2);
+      border-color: var(--neon-green); box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
     }
-
     .card h3 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin-top: 0; }
-    .price { font-size: 48px; font-weight: 900; color: var(--neon-red); margin: 20px 0; }
-    .price span { font-size: 16px; color: var(--text-muted); font-weight: 400; }
-    
+    .price { font-size: 48px; font-weight: 900; color: var(--neon-green); margin: 20px 0; font-family: 'Share Tech Mono', monospace; }
+    .price span { font-size: 16px; color: var(--text-muted); font-weight: 400; font-family: 'Roboto', sans-serif; }
     .card ul { list-style: none; padding: 0; margin: 0 0 30px 0; color: var(--text-muted); line-height: 2.2; }
-    
     .btn-card {
-      display: block; width: 100%; padding: 15px 0;
-      background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff; text-decoration: none; border-radius: 8px;
-      font-weight: 700; transition: all 0.3s; cursor: pointer; font-size: 16px;
+      display: block; width: 100%; padding: 15px 0; background: transparent;
+      border: 1px solid rgba(0, 255, 65, 0.3); color: var(--neon-green);
+      border-radius: 4px; font-weight: 700; transition: all 0.3s; cursor: none;
+      font-family: 'Share Tech Mono', monospace; letter-spacing: 1px;
     }
-
     .btn-card:hover {
-      border-color: var(--neon-red); color: #fff;
-      background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red-glow);
+      border-color: var(--neon-green); color: #000; background: var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green-glow);
     }
 
     /* КОНТАКТЫ И КАРТА */
-    .contacts-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      background: var(--bg-card);
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    .contacts-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; background: var(--bg-card); border: 1px solid rgba(0, 255, 65, 0.1); border-radius: 8px; overflow: hidden; }
     .contact-info { padding: 40px; }
     .contact-info h3 { font-family: 'Montserrat', sans-serif; font-size: 28px; margin-top: 0; margin-bottom: 20px; }
     .contact-info p { color: var(--text-muted); font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; line-height: 1.6; }
-    .contact-info strong { color: #fff; }
-    .map-container iframe { width: 100%; height: 100%; min-height: 350px; border: 0; filter: grayscale(100%) invert(90%) contrast(80%); }
+    .contact-info strong { color: var(--neon-green); }
+    .map-container iframe { width: 100%; height: 100%; min-height: 350px; border: 0; filter: grayscale(100%) invert(90%) hue-rotate(90deg) contrast(80%); } /* Карта в зеленых тонах */
 
     /* МОДАЛЬНОЕ ОКНО */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px);
       display: flex; justify-content: center; align-items: center;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000;
+      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000; cursor: auto;
     }
     .modal-overlay.active { opacity: 1; visibility: visible; }
-    
     .modal-content {
-      background: var(--bg-card);
-      border: 1px solid var(--neon-red);
-      border-radius: 16px;
-      padding: 40px;
-      width: 90%; max-width: 450px;
-      position: relative;
-      box-shadow: 0 0 50px rgba(255, 26, 26, 0.2);
-      transform: translateY(30px); transition: transform 0.3s ease;
+      background: var(--bg-card); border: 1px solid var(--neon-green); border-radius: 8px;
+      padding: 40px; width: 90%; max-width: 450px; position: relative;
+      box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
     }
-    .modal-overlay.active .modal-content { transform: translateY(0); }
-    
-    .close-modal {
-      position: absolute; top: 15px; right: 20px;
-      color: var(--text-muted); font-size: 28px; cursor: pointer; background: none; border: none; transition: color 0.3s;
-    }
-    .close-modal:hover { color: var(--neon-red); }
-    
-    .modal-content h3 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin-top: 0; text-align: center; }
-    .modal-content p { color: var(--text-muted); text-align: center; margin-bottom: 25px; font-size: 15px; line-height: 1.5; }
-    
+    .close-modal { position: absolute; top: 15px; right: 20px; color: var(--text-muted); font-size: 28px; cursor: pointer; background: none; border: none; }
+    .close-modal:hover { color: var(--neon-green); }
+    .modal-content h3 { font-family: 'Montserrat', sans-serif; text-align: center; color: var(--neon-green); }
+    .modal-content p { color: var(--text-muted); text-align: center; font-size: 15px; }
     .modal-content input, .modal-content select {
-      width: 100%; padding: 15px; background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
-      color: #fff; font-size: 16px; margin-bottom: 15px; outline: none; transition: border 0.3s;
-      font-family: inherit;
+      width: 100%; padding: 15px; background: rgba(0,255,65,0.05); border: 1px solid rgba(0, 255, 65, 0.2);
+      border-radius: 4px; color: #fff; font-size: 16px; margin-bottom: 15px; outline: none; font-family: inherit;
     }
-    .modal-content input:focus, .modal-content select:focus { border-color: var(--neon-red); }
-    .modal-content select { appearance: none; cursor: pointer; }
-    .modal-content select option { background: var(--bg-card); color: #fff; }
-    
-    /* Иконка для инпута даты */
-    ::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
-
-    .modal-content .btn-submit {
-      width: 100%; padding: 16px; background: var(--neon-red); color: #fff;
-      border: none; border-radius: 8px; font-size: 16px; font-weight: 700;
-      cursor: pointer; transition: background 0.3s; text-transform: uppercase;
-      box-shadow: 0 0 15px rgba(255,26,26,0.3); margin-top: 10px;
+    .modal-content input:focus, .modal-content select:focus { border-color: var(--neon-green); }
+    .modal-content select option { background: var(--bg-dark); }
+    ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(90deg); cursor: pointer; }
+    .btn-submit {
+      width: 100%; padding: 16px; background: var(--neon-green); color: #000;
+      border: none; border-radius: 4px; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-green-glow);
     }
-    .modal-content .btn-submit:hover { background: #cc0000; box-shadow: 0 0 25px rgba(255,26,26,0.6); }
 
-    /* ФУТЕР */
-    footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255, 255, 255, 0.05); color: var(--text-muted); font-size: 14px; }
+    footer { text-align: center; padding: 40px; border-top: 1px solid rgba(0, 255, 65, 0.1); color: var(--text-muted); font-size: 14px; font-family: 'Share Tech Mono', monospace; }
 
-    /* АДАПТИВ */
+    /* МЕДИА-ЗАПРОСЫ */
     @media (max-width: 768px) {
+      body { cursor: auto; } /* Возвращаем обычный курсор на телефонах */
+      #custom-cursor { display: none !important; }
       header { flex-direction: column; gap: 15px; padding: 15px; }
       nav a { margin: 0 10px; font-size: 14px; }
       .tournament-card { flex-direction: column; text-align: center; gap: 15px; }
       .contacts-wrapper { grid-template-columns: 1fr; }
-      .card.vip { transform: scale(1); }
-      .card.vip:hover { transform: translateY(-10px); }
-      .hero { padding: 100px 20px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Кастомный курсор -->
+  <div id="custom-cursor"></div>
+  
+  <!-- Фон матрицы -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- Бегущая строка -->
+  <div class="ticker-wrapper">
+    <div class="ticker">
+      <span>СИСТЕМА АКТИВИРОВАНА // ДОБРО ПОЖАЛОВАТЬ В ARENA // БЛИЖАЙШИЙ ТУРНИР ПО CS2 В ПЯТНИЦУ // СКИДКА 20% НА НОЧНЫЕ ПАКЕТЫ // </span>
+      <span>СИСТЕМА АКТИВИРОВАНА // ДОБРО ПОЖАЛОВАТЬ В ARENA // БЛИЖАЙШИЙ ТУРНИР ПО CS2 В ПЯТНИЦУ // СКИДКА 20% НА НОЧНЫЕ ПАКЕТЫ // </span>
+    </div>
+  </div>
+
   <header>
     <div class="logo">ARENA<span>.</span></div>
     <nav>
-      <a href="#hero" class="active">Главная</a>
-      <a href="#gallery">Клуб</a>
-      <a href="#tournaments">Турниры</a>
-      <a href="#pricing">Тарифы</a>
-      <a href="#contacts">Контакты</a>
+      <a href="#hero" class="active">[ Главная ]</a>
+      <a href="#gallery">[ Клуб ]</a>
+      <a href="#tournaments">[ Турниры ]</a>
+      <a href="#pricing">[ Тарифы ]</a>
+      <a href="#contacts">[ Контакты ]</a>
     </nav>
   </header>
 
-  <!-- Добавили id="hero" для навигации -->
   <section class="hero" id="hero">
-    <h1>Твоя зона победы</h1>
+    <h1 class="glitch" data-text="ТВОЯ ЗОНА ПОБЕДЫ">ТВОЯ ЗОНА ПОБЕДЫ</h1>
     <p>Мощные ПК, топовые консоли и атмосфера настоящего киберспорта. Заходи, занимай место, забирай победу.</p>
     <button class="btn-main" onclick="openModal()">Забронировать место</button>
   </section>
 
-  <!-- Добавили класс fade-in -->
   <section id="gallery" class="fade-in">
     <h2 class="section-title">Атмосфера клуба</h2>
     <div class="gallery-grid">
+      <!-- Использую надежные ссылки, а если не загрузятся - будет зеленый фон -->
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Игровая зона">
+        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Игровая зона" onerror="this.style.display='none'">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=800&auto=format&fit=crop" alt="Геймеры">
+        <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Геймеры" onerror="this.style.display='none'">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?q=80&w=800&auto=format&fit=crop" alt="Консоли">
+        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Консоли" onerror="this.style.display='none'">
       </div>
     </div>
   </section>
@@ -410,26 +378,19 @@
   <section id="tournaments" class="fade-in">
     <h2 class="section-title">Ближайшие турниры</h2>
     <div class="tournament-list">
-      <div class="tournament-card">
+      <div class="tournament-card tilt">
         <div class="t-info">
           <h4>CS2: Friday Night Cup</h4>
           <span>Пятница, 20:00 • Формат 5x5</span>
         </div>
         <div class="t-prize">10 000₽</div>
       </div>
-      <div class="tournament-card">
+      <div class="tournament-card tilt">
         <div class="t-info">
           <h4>Valorant: Red Bull Clash</h4>
           <span>Суббота, 18:00 • Формат 5x5</span>
         </div>
         <div class="t-prize">15 000₽</div>
-      </div>
-      <div class="tournament-card">
-        <div class="t-info">
-          <h4>FIFA 24: 1v1 Bracket</h4>
-          <span>Воскресенье, 15:00 • PS5</span>
-        </div>
-        <div class="t-prize">5 000₽</div>
       </div>
     </div>
   </section>
@@ -438,37 +399,34 @@
     <h2 class="section-title">Наши тарифы</h2>
     <div class="cards-container">
       
-      <div class="card">
+      <div class="card tilt">
         <h3>Standard</h3>
         <div class="price">150₽<span>/час</span></div>
         <ul>
           <li>Монитор 144Hz</li>
           <li>RTX 3060</li>
           <li>Механическая клавиатура</li>
-          <li>Игровая мышь</li>
         </ul>
         <button class="btn-card" onclick="openModal('standard')">Выбрать</button>
       </div>
 
-      <div class="card vip">
+      <div class="card vip tilt">
         <h3>VIP Zone</h3>
         <div class="price">250₽<span>/час</span></div>
         <ul>
           <li>Монитор 240Hz</li>
           <li>RTX 4070 Ti</li>
-          <li>Комфортное кресло</li>
           <li>Напиток в подарок</li>
         </ul>
         <button class="btn-card" onclick="openModal('vip')">Выбрать</button>
       </div>
 
-      <div class="card">
+      <div class="card tilt">
         <h3>PS5 Lounge</h3>
         <div class="price">300₽<span>/час</span></div>
         <ul>
           <li>PlayStation 5</li>
           <li>Телевизор 65" 4K</li>
-          <li>2 геймпада</li>
           <li>Диван на 4 человека</li>
         </ul>
         <button class="btn-card" onclick="openModal('ps5')">Выбрать</button>
@@ -482,10 +440,9 @@
     <div class="contacts-wrapper">
       <div class="contact-info">
         <h3>Ждем тебя в ARENA</h3>
-        <p>📍 <strong>Адрес:</strong> г. Челябинск, ул. Кирова, д. 15 (2 этаж)</p>
+        <p>📍 <strong>Адрес:</strong> г. Челябинск, ул. Кирова, д. 15</p>
         <p>📞 <strong>Телефон:</strong> +7 (999) 123-45-67</p>
         <p>🕒 <strong>Режим работы:</strong> Круглосуточно, 24/7</p>
-        <p style="margin-top: 30px; font-size: 15px; line-height: 1.7;">Мы находимся в самом центре города. Удобная парковка, рядом метро и остановки общественного транспорта. Ждем тебя на тренировку или турнир!</p>
       </div>
       <div class="map-container">
         <iframe src="https://yandex.ru/map-widget/v1/?ll=61.402554%2C55.160222&z=16&pt=61.402554,55.160222,pm2rdm" width="100%" height="400" frameborder="0" allowfullscreen="true"></iframe>
@@ -494,19 +451,18 @@
   </section>
 
   <footer>
-    <p>© 2026 ARENA Cybersport Club. Все права защищены.</p>
+    <p>[ SYSTEM STATUS: ONLINE ] // © 2026 ARENA Cyber Club</p>
   </footer>
 
-  <!-- МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ -->
+  <!-- МОДАЛЬНОЕ ОКНО -->
   <div class="modal-overlay" id="bookingModal">
     <div class="modal-content">
       <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h3>Бронирование</h3>
-      <p>Оставь данные, и мы закрепим за тобой место!</p>
+      <h3>[ БРОНИРОВАНИЕ ]</h3>
+      <p>Оставь данные для доступа к терминалу.</p>
       
-      <!-- Обновленная форма -->
-      <form onsubmit="event.preventDefault(); closeModal(); alert('Заявка отправлена! (Это демо-режим)');">
-        <input type="text" placeholder="Твое имя" required>
+      <form onsubmit="event.preventDefault(); closeModal(); alert('ЗАЯВКА ПРИНЯТА. ОЖИДАЙТЕ СВЯЗИ.');">
+        <input type="text" placeholder="Твое имя (Позывной)" required>
         <input type="tel" placeholder="Номер телефона" required>
         
         <select id="zoneSelect" required>
@@ -516,9 +472,9 @@
           <option value="ps5">PS5 Lounge (300₽/ч)</option>
         </select>
 
-        <input type="datetime-local" required title="Выберите дату и время">
+        <input type="datetime-local" required>
 
-        <button type="submit" class="btn-submit">Отправить заявку</button>
+        <button type="submit" class="btn-submit">Инициализировать</button>
       </form>
     </div>
   </div>
@@ -541,48 +497,108 @@
       if (e.target === modal) closeModal();
     });
 
-    // --- 2. ПЛАВНОЕ ПОЯВЛЕНИЕ БЛОКОВ (SCROLL ANIMATION) ---
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.15 // Срабатывает, когда 15% блока в зоне видимости
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target); // Анимация срабатывает только 1 раз
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.fade-in').forEach(section => {
-      observer.observe(section);
-    });
-
-    // --- 3. УМНАЯ НАВИГАЦИЯ (ПОДСВЕТКА АКТИВНОГО РАЗДЕЛА) ---
+    // --- 2. УМНАЯ НАВИГАЦИЯ ---
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('nav a');
 
     window.addEventListener('scroll', () => {
       let current = '';
-      
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        // Если проскроллили до середины секции
-        if (scrollY >= (sectionTop - sectionHeight / 3)) {
+        if (scrollY >= (sectionTop - 200)) {
           current = section.getAttribute('id');
         }
       });
-
       navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
           link.classList.add('active');
         }
       });
+    });
+
+    // --- 3. КАСТОМНЫЙ КУРСОР ---
+    const cursor = document.getElementById('custom-cursor');
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (!isMobile) {
+      cursor.style.display = 'block';
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+
+      // Увеличение курсора при наведении на кликабельные элементы
+      const clickables = document.querySelectorAll('a, button, input, select');
+      clickables.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.width = '40px';
+          cursor.style.height = '40px';
+          cursor.style.backgroundColor = 'rgba(0, 255, 65, 0.2)';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.style.width = '20px';
+          cursor.style.height = '20px';
+          cursor.style.backgroundColor = 'transparent';
+        });
+      });
+    }
+
+    // --- 4. 3D НАКЛОН КАРТОЧЕК (TILT) ---
+    if (!isMobile) {
+      const tiltCards = document.querySelectorAll('.tilt');
+      tiltCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -10; // Максимальный наклон 10 градусов
+          const rotateY = ((x - centerX) / centerX) * 10;
+          
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+        });
+      });
+    }
+
+    // --- 5. МАТРИЧНЫЙ ФОН ---
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5, 7, 5, 0.05)'; // Шлейф
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ff41'; // Цвет символов
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        // Сброс капли в начало с случайной задержкой
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 50); // Скорость падения
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
   </script>
 
