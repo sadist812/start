@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARENA | Киберспортивный клуб</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0a0c;
+      --bg-card: #131316;
+      --text-main: #ffffff;
+      --text-muted: #888891;
+      --neon-red: #ff1a1a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      background-image: radial-gradient(circle at 50% 0%, rgba(255, 26, 26, 0.15) 0%, transparent 50%);
+      background-repeat: no-repeat;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(10, 10, 12, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    .logo span {
+      color: var(--neon-red);
+    }
+
+    nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      margin-left: 30px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--neon-red);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 120px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      margin: 0;
+      line-height: 1.1;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ffffff, var(--neon-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(255, 26, 26, 0.3);
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 20px 0 40px;
+      line-height: 1.5;
+    }
+
+    .btn-main {
+      background-color: var(--neon-red);
+      color: #fff;
+      text-decoration: none;
+      padding: 18px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 26, 26, 0.4);
+      border: 2px solid var(--neon-red);
+    }
+
+    .btn-main:hover {
+      background-color: transparent;
+      color: var(--neon-red);
+      box-shadow: 0 0 30px rgba(255, 26, 26, 0.8);
+      transform: translateY(-3px);
+    }
+
+    .pricing {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing h2 {
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 4px;
+      background: var(--neon-red);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255, 26, 26, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    .price {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--neon-red);
+      margin: 20px 0;
+    }
+
+    .price span {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    .btn-card {
+      display: block;
+      width: 100%;
+      padding: 15px 0;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .btn-card:hover {
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+      background: rgba(255, 26, 26, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">ARENA<span>.</span></div>
+    <nav>
+      <a href="#">Главная</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#">Турниры</a>
+      <a href="#">Контакты</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Твоя зона победы</h1>
+    <p>Мощные ПК, топовые консоли и атмосфера настоящего киберспорта. Заходи, занимай место, забирай победу.</p>
+    <a href="#pricing" class="btn-main">Забронировать место</a>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <h2>Наши тарифы</h2>
+    <div class="cards-container">
+      
+      <div class="card">
+        <h3>Standard</h3>
+        <div class="price">150₽<span>/час</span></div>
+        <ul>
+          <li>Монитор 144Hz</li>
+          <li>RTX 3060</li>
+          <li>Механическая клавиатура</li>
+          <li>Игровая мышь</li>
+        </ul>
+        <a href="#" class="btn-card">Выбрать</a>
+      </div>
+
+      <div class="card" style="border-color: var(--neon-red);">
+        <h3>VIP Zone</h3>
+        <div class="price">250₽<span>/час</span></div>
+        <ul>
+          <li>Монитор 240Hz</li>
+          <li>RTX 4070 Ti</li>
+          <li>Комфортное кресло</li>
+          <li>Напиток в подарок</li>
+        </ul>
+        <a href="#" class="btn-card" style="border-color: var(--neon-red); background: rgba(255, 26, 26, 0.1);">Выбрать</a>
+      </div>
+
+      <div class="card">
+        <h3>PS5 Lounge</h3>
+        <div class="price">300₽<span>/час</span></div>
+        <ul>
+          <li>PlayStation 5</li>
+          <li>Телевизор 65" 4K</li>
+          <li>2 геймпада</li>
+          <li>Диван на 4 человека</li>
+        </ul>
+        <a href="#" class="btn-card">Выбрать</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 ARENA Cybersport Club. Все права защищены.</p>
+  </footer>
+
+</body>
+</html>
