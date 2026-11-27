@@ -73,7 +73,7 @@
     }
     .logo span { color: var(--accent); }
 
-    nav { display: flex; gap: 30px; }
+    nav { display: flex; align-items: center; gap: 30px; }
 
     nav a {
       color: var(--text-muted);
@@ -84,12 +84,29 @@
       position: relative;
     }
     nav a:hover, nav a.active { color: var(--text-main); }
+    
     nav a::after {
       content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
       width: 0%; height: 2px; background: var(--accent);
       transition: width 0.3s ease; border-radius: 2px;
     }
     nav a.active::after { width: 100%; }
+
+    /* Кнопка Войти */
+    .nav-login {
+      color: var(--accent) !important;
+      border: 1px solid var(--accent);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 600 !important;
+      transition: all 0.3s ease;
+    }
+    .nav-login::after { display: none; /* Убираем полоску снизу */ }
+    .nav-login:hover {
+      background: var(--accent);
+      color: #fff !important;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
 
     /* ГЛАВНЫЙ ЭКРАН */
     .hero {
@@ -168,7 +185,7 @@
       text-align: center;
     }
 
-    /* ГАЛЕРЕЯ (Надежные ссылки + фоллбэк) */
+    /* ГАЛЕРЕЯ */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -178,7 +195,7 @@
       height: 280px;
       border-radius: 16px;
       overflow: hidden;
-      background: linear-gradient(45deg, #121419, #1a2a22); /* Подложка, если фото не загрузится */
+      background: linear-gradient(45deg, #121419, #1a2a22);
       border: 1px solid var(--border-color);
       position: relative;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -188,7 +205,7 @@
     }
     
     .gallery-item::before {
-      content: '🎮'; /* Иконка на случай если нет картинки */
+      content: '🎮';
       position: absolute;
       font-size: 50px;
       opacity: 0.2;
@@ -201,7 +218,7 @@
       transition: transform 0.6s ease, opacity 0.6s;
       opacity: 0.85;
       position: relative;
-      z-index: 1; /* Чтобы картинка перекрывала иконку */
+      z-index: 1;
     }
     .gallery-item:hover img {
       transform: scale(1.08);
@@ -313,6 +330,7 @@
         <a href="#gallery">Клуб</a>
         <a href="#pricing">Тарифы</a>
         <a href="#contacts">Контакты</a>
+        <a href="profile.html" class="nav-login">Войти</a>
       </nav>
     </header>
   </div>
@@ -323,7 +341,7 @@
     <button class="btn-main" onclick="openModal()">Забронировать место 🎮</button>
   </section>
 
-  <!-- ГАЛЕРЕЯ (Pexels + защита от не загрузки) -->
+  <!-- ГАЛЕРЕЯ -->
   <section id="gallery" class="fade-in">
     <h2 class="section-title">Атмосфера клуба</h2>
     <div class="gallery-grid">
@@ -454,7 +472,7 @@
 
     // --- 2. УМНАЯ НАВИГАЦИЯ ---
     const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a');
+    const navLinks = document.querySelectorAll('nav a:not(.nav-login)'); // Исключаем кнопку "Войти" из подсветки
 
     window.addEventListener('scroll', () => {
       let current = '';
