@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARENA | Личный кабинет</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0a0b0e; 
+      --bg-card: #121419;
+      --bg-card-hover: #181b22;
+      --text-main: #ffffff;
+      --text-muted: #8b92a0;
+      --accent: #10b981; 
+      --accent-glow: rgba(16, 185, 129, 0.4);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      background-image: radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+      min-height: 100vh;
+    }
+
+    /* НАВИГАЦИЯ (Та же парящая плашка) */
+    .nav-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: max-content;
+      max-width: 95%;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(18, 20, 25, 0.7);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      gap: 40px;
+    }
+    .logo { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: 1px; }
+    .logo span { color: var(--accent); }
+    nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; margin-left: 20px; }
+    nav a:hover { color: var(--text-main); }
+
+    /* КОНТЕЙНЕР ДАШБОРДА */
+    .dashboard {
+      max-width: 1200px;
+      margin: 120px auto 50px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 30px;
+    }
+
+    /* ЛЕВАЯ ПАНЕЛЬ (ПРОФИЛЬ) */
+    .sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      height: fit-content;
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #059669);
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 0 20px var(--accent-glow);
+      border: 3px solid var(--bg-main);
+    }
+    .sidebar h2 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin-bottom: 5px; }
+    .rank { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 25px; }
+    
+    .balance-card {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .balance-card span { display: block; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .balance-card strong { font-size: 28px; color: #fff; }
+    
+    .btn-profile {
+      display: block; width: 100%; padding: 12px;
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-main); border-radius: 10px; cursor: pointer;
+      transition: 0.3s; font-weight: 500;
+    }
+    .btn-profile:hover { background: rgba(255,255,255,0.05); }
+
+    /* ПРАВАЯ ЧАСТЬ (КОНТЕНТ) */
+    .main-content { display: flex; flex-direction: column; gap: 30px; }
+
+    /* АКТИВНАЯ БРОНЬ */
+    .active-session {
+      background: linear-gradient(90deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 25px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+    .session-info h3 { font-family: 'Montserrat', sans-serif; font-size: 20px; margin-bottom: 5px; }
+    .session-info p { color: var(--text-muted); font-size: 14px; }
+    .session-info strong { color: var(--accent); }
+    .btn-stop {
+      background: transparent; border: 1px solid var(--danger); color: var(--danger);
+      padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s;
+    }
+    .btn-stop:hover { background: var(--danger); color: #fff; }
+
+    /* СТАТИСТИКА */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .stat-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 10px; }
+    .stat-card h4 { font-size: 32px; font-weight: 800; }
+    .stat-card h4 span { font-size: 16px; color: var(--text-muted); font-weight: 400; }
+
+    /* ИСТОРИЯ МАТЧЕЙ (ТАБЛИЦА) */
+    .history-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+    }
+    .history-section h3 { font-family: 'Montserrat', sans-serif; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); font-weight: 500; }
+    td { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 15px; }
+    tr:last-child td { border-bottom: none; }
+    
+    .win { color: var(--accent); font-weight: 600; }
+    .lose { color: var(--danger); font-weight: 600; }
+
+    /* АДАПТИВ */
+    @media (max-width: 900px) {
+      .dashboard { grid-template-columns: 1fr; margin-top: 130px; }
+      .active-session { flex-direction: column; text-align: center; gap: 15px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      th:nth-child(3), td:nth-child(3) { display: none; } /* Скрываем колонку на мобилках */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-container">
+    <header>
+      <div class="logo">ARENA<span>.</span></div>
+      <nav>
+        <a href="arena.html">На главную</a>
+        <a href="#" style="color: #fff;">Профиль</a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="dashboard">
+    
+    <!-- ЛЕВАЯ ПАНЕЛЬ -->
+    <aside class="sidebar">
+      <div class="avatar">😈</div>
+      <h2>sadist812</h2>
+      <div class="rank">Global Elite</div>
+      
+      <div class="balance-card">
+        <span>Баланс клуба</span>
+        <strong>1 250 ₽</strong>
+      </div>
+      
+      <button class="btn-profile">Пополнить баланс</button>
+    </aside>
+
+    <!-- ПРАВАЯ ПАНЕЛЬ -->
+    <main class="main-content">
+      
+      <!-- Активная бронь -->
+      <div class="active-session">
+        <div class="session-info">
+          <h3>Активная сессия</h3>
+          <p>ПК №12 • VIP Zone • Осталось: <strong>1 час 45 мин</strong></p>
+        </div>
+        <button class="btn-stop">Завершить</button>
+      </div>
+
+      <!-- Статистика -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p>Всего часов</p>
+          <h4>142<span> ч</span></h4>
+        </div>
+        <div class="stat-card">
+          <p>Победы в турнирах</p>
+          <h4>8</h4>
+        </div>
+        <div class="stat-card">
+          <p>Win Rate</p>
+          <h4>64<span>%</span></h4>
+        </div>
+      </div>
+
+      <!-- История матчей -->
+      <div class="history-section">
+        <h3>Последние матчи</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Игра / Турнир</th>
+              <th>Результат</th>
+              <th>Счет</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CS2: Friday Night Cup</td>
+              <td class="win">Победа</td>
+              <td>16 : 12</td>
+              <td>12.11.2026</td>
+            </tr>
+            <tr>
+              <td>Valorant: Red Bull Clash</td>
+              <td class="lose">Поражение</td>
+              <td>9 : 13</td>
+              <td>08.11.2026</td>
+            </tr>
+            <tr>
+              <td>CS2: Friday Night Cup</td>
+              <td class="win">Победа</td>
+              <td>16 : 5</td>
+              <td>05.11.2026</td>
+            </tr>
+            <tr>
+              <td>FIFA 24: 1v1 Bracket</td>
+              <td class="win">Победа</td>
+              <td>3 : 1</td>
+              <td>01.11.2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>
