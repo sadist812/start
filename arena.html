@@ -14,7 +14,7 @@
       --bg-card-hover: #181b22;
       --text-main: #ffffff;
       --text-muted: #8b92a0;
-      --accent: #10b981; /* Изумрудный */
+      --accent: #10b981; 
       --accent-glow: rgba(16, 185, 129, 0.4);
       --border-color: rgba(255, 255, 255, 0.08);
     }
@@ -27,7 +27,6 @@
       background-color: var(--bg-main);
       color: var(--text-main);
       overflow-x: hidden;
-      /* Мягкий прожектор на фоне */
       background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 60%);
       background-repeat: no-repeat;
     }
@@ -95,7 +94,7 @@
     /* ГЛАВНЫЙ ЭКРАН */
     .hero {
       text-align: center;
-      padding: 200px 20px 120px; /* Отступ сверху из-за плашки */
+      padding: 200px 20px 120px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -130,7 +129,6 @@
       opacity: 0;
     }
 
-    /* КНОПКА */
     .btn-main {
       background: linear-gradient(135deg, var(--accent), #059669);
       color: #fff;
@@ -161,7 +159,7 @@
     }
 
     /* Секции */
-    section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+    section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
     .section-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 36px;
@@ -170,7 +168,7 @@
       text-align: center;
     }
 
-    /* ГАЛЕРЕЯ */
+    /* ГАЛЕРЕЯ (Надежные ссылки + фоллбэк) */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -180,48 +178,35 @@
       height: 280px;
       border-radius: 16px;
       overflow: hidden;
-      background: var(--bg-card);
+      background: linear-gradient(45deg, #121419, #1a2a22); /* Подложка, если фото не загрузится */
       border: 1px solid var(--border-color);
       position: relative;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    
+    .gallery-item::before {
+      content: '🎮'; /* Иконка на случай если нет картинки */
+      position: absolute;
+      font-size: 50px;
+      opacity: 0.2;
+    }
+
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.6s ease, opacity 0.6s;
-      opacity: 0.9;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1; /* Чтобы картинка перекрывала иконку */
     }
     .gallery-item:hover img {
       transform: scale(1.08);
       opacity: 1;
     }
-
-    /* ТУРНИРЫ */
-    .tournament-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-    .tournament-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 30px;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      transition: all 0.3s ease;
-    }
-    .tournament-card:hover {
-      background: var(--bg-card-hover);
-      border-color: rgba(16, 185, 129, 0.4);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .t-info h4 { margin: 0 0 5px 0; font-size: 20px; font-weight: 700; }
-    .t-info span { color: var(--text-muted); font-size: 15px; }
-    .t-prize { font-size: 26px; font-weight: 800; color: var(--accent); margin-top: auto; }
 
     /* ТАРИФЫ */
     .cards-container {
@@ -326,7 +311,6 @@
       <nav>
         <a href="#hero" class="active">Главная</a>
         <a href="#gallery">Клуб</a>
-        <a href="#tournaments">Турниры</a>
         <a href="#pricing">Тарифы</a>
         <a href="#contacts">Контакты</a>
       </nav>
@@ -339,58 +323,32 @@
     <button class="btn-main" onclick="openModal()">Забронировать место 🎮</button>
   </section>
 
-  <!-- ГАЛЕРЕЯ (100% рабочие ссылки) -->
+  <!-- ГАЛЕРЕЯ (Pexels + защита от не загрузки) -->
   <section id="gallery" class="fade-in">
     <h2 class="section-title">Атмосфера клуба</h2>
     <div class="gallery-grid">
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Игровая зона" loading="lazy">
+        <img src="https://images.pexels.com/photos/7915357/pexels-photo-7915357.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Игровая зона" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=800&auto=format&fit=crop" alt="Геймеры" loading="lazy">
+        <img src="https://images.pexels.com/photos/3945653/pexels-photo-3945653.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Геймеры" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=800&auto=format&fit=crop" alt="Киберспорт" loading="lazy">
+        <img src="https://images.pexels.com/photos/2007647/pexels-photo-2007647.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Киберспорт" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop" alt="Консоли" loading="lazy">
+        <img src="https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Консоли" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?q=80&w=800&auto=format&fit=crop" alt="Сетап" loading="lazy">
+        <img src="https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Сетап" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=800&auto=format&fit=crop" alt="Неон" loading="lazy">
+        <img src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Неон" loading="lazy">
       </div>
     </div>
   </section>
 
-  <section id="tournaments" class="fade-in">
-    <h2 class="section-title">Ближайшие турниры</h2>
-    <div class="tournament-list">
-      <div class="tournament-card tilt">
-        <div class="t-info">
-          <h4>CS2: Friday Night Cup</h4>
-          <span>Пятница, 20:00 • Формат 5x5</span>
-        </div>
-        <div class="t-prize">10 000 ₽</div>
-      </div>
-      <div class="tournament-card tilt">
-        <div class="t-info">
-          <h4>Valorant: Red Bull Clash</h4>
-          <span>Суббота, 18:00 • Формат 5x5</span>
-        </div>
-        <div class="t-prize">15 000 ₽</div>
-      </div>
-      <div class="tournament-card tilt">
-        <div class="t-info">
-          <h4>FIFA 24: 1v1 Bracket</h4>
-          <span>Воскресенье, 15:00 • PS5</span>
-        </div>
-        <div class="t-prize">5 000 ₽</div>
-      </div>
-    </div>
-  </section>
-
+  <!-- ТАРИФЫ -->
   <section class="pricing fade-in" id="pricing">
     <h2 class="section-title">Наши тарифы</h2>
     <div class="cards-container">
@@ -431,6 +389,7 @@
     </div>
   </section>
 
+  <!-- КОНТАКТЫ -->
   <section id="contacts" class="fade-in">
     <h2 class="section-title">Как нас найти</h2>
     <div class="contacts-wrapper">
