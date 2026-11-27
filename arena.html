@@ -6,18 +6,16 @@
   <title>ARENA | Cyber Club</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Используем премиальные шрифты: Inter для текста, Montserrat для заголовков -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Благородная темная тема */
       --bg-main: #0a0b0e; 
       --bg-card: #121419;
       --bg-card-hover: #181b22;
-      --text-main: #f0f2f5;
+      --text-main: #ffffff;
       --text-muted: #8b92a0;
-      --accent: #10b981; /* Мятно-изумрудный вместо кислотного */
-      --accent-glow: rgba(16, 185, 129, 0.3);
+      --accent: #10b981; /* Изумрудный */
+      --accent-glow: rgba(16, 185, 129, 0.4);
       --border-color: rgba(255, 255, 255, 0.08);
     }
 
@@ -29,185 +27,187 @@
       background-color: var(--bg-main);
       color: var(--text-main);
       overflow-x: hidden;
-      cursor: default;
+      /* Мягкий прожектор на фоне */
+      background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 60%);
+      background-repeat: no-repeat;
     }
 
-    /* ФОНОВАЯ МАТРИЦА (едва заметная) */
     #matrix-canvas {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       z-index: -1;
-      opacity: 0.07; /* Почти невидимая */
+      opacity: 0.05; 
     }
 
-    /* БЕГУЩАЯ СТРОКА (Минималистичная) */
-    .ticker-wrapper {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 12px;
-      padding: 8px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      position: relative;
-      z-index: 101;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .ticker {
-      display: inline-block;
-      animation: ticker 25s linear infinite;
-    }
-    .ticker span { margin-right: 50px; }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    /* ПАРЯЩАЯ ПЛАШКА НАВИГАЦИИ */
+    .nav-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: max-content;
+      max-width: 95%;
     }
 
-    /* ШАПКА */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 5%;
-      background: rgba(10, 11, 14, 0.8);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid var(--border-color);
+      padding: 15px 40px;
+      background: rgba(18, 20, 25, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      gap: 40px;
     }
 
     .logo {
       font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 22px;
+      font-weight: 900;
       letter-spacing: 1px;
+      color: #fff;
       text-transform: uppercase;
     }
     .logo span { color: var(--accent); }
 
+    nav { display: flex; gap: 30px; }
+
     nav a {
       color: var(--text-muted);
       text-decoration: none;
-      margin-left: 30px;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 15px;
       transition: color 0.3s;
       position: relative;
     }
     nav a:hover, nav a.active { color: var(--text-main); }
-    
-    /* Плавное появление блоков */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+    nav a::after {
+      content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+      width: 0%; height: 2px; background: var(--accent);
+      transition: width 0.3s ease; border-radius: 2px;
     }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    nav a.active::after { width: 100%; }
 
     /* ГЛАВНЫЙ ЭКРАН */
     .hero {
       text-align: center;
-      padding: 120px 20px;
+      padding: 200px 20px 120px; /* Отступ сверху из-за плашки */
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 80vh;
+      justify-content: center;
     }
 
     .hero h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(40px, 7vw, 70px);
-      font-weight: 800;
+      font-size: clamp(45px, 8vw, 85px);
+      font-weight: 900;
       margin: 0;
-      line-height: 1.1;
-      letter-spacing: -1px;
-      color: var(--text-main);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      color: #fff;
+      animation: slideUp 0.8s ease-out forwards;
+      opacity: 0;
     }
-    /* Легкое свечение за текстом */
+
     .hero h1 span {
       color: var(--accent);
-      text-shadow: 0 0 30px var(--accent-glow);
+      text-shadow: 0 0 40px var(--accent-glow);
     }
 
     .hero p {
-      font-size: 18px;
+      font-size: 20px;
       color: var(--text-muted);
-      max-width: 600px;
-      margin: 20px 0 40px;
+      max-width: 650px;
+      margin: 25px 0 45px;
       line-height: 1.6;
+      animation: slideUp 0.8s ease-out 0.2s forwards;
+      opacity: 0;
     }
 
-    /* Кнопки */
+    /* КНОПКА */
     .btn-main {
-      background: var(--text-main);
-      color: var(--bg-main);
-      padding: 16px 36px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #059669);
+      color: #fff;
+      padding: 18px 45px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50px;
       text-decoration: none;
       cursor: pointer;
       border: none;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 0 20px var(--accent-glow);
+      animation: slideUp 0.8s ease-out 0.4s forwards;
+      opacity: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
+
     .btn-main:hover {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 25px var(--accent-glow);
-      transform: translateY(-2px);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 40px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Секции */
-    section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
+    section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
     .section-title {
       font-family: 'Montserrat', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 40px;
-      color: var(--text-main);
-      border-left: 4px solid var(--accent);
-      padding-left: 15px;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 50px;
+      text-align: center;
     }
 
-    /* ГАЛЕРЕЯ (6 КАРТИНОК, БЕЗ ФИЛЬТРОВ, НАДЕЖНЫЙ ХОСТИНГ) */
+    /* ГАЛЕРЕЯ */
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
     }
     .gallery-item {
-      height: 240px;
-      border-radius: 12px;
+      height: 280px;
+      border-radius: 16px;
       overflow: hidden;
-      background: var(--bg-card); /* Заглушка, если фото не загрузится */
+      background: var(--bg-card);
       border: 1px solid var(--border-color);
       position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
-      opacity: 0.8; /* Легкая приглушенность для минимализма */
-      transition: opacity 0.5s, transform 0.5s;
+      transition: transform 0.6s ease, opacity 0.6s;
+      opacity: 0.9;
     }
     .gallery-item:hover img {
-      transform: scale(1.05);
-      opacity: 1; /* Возвращаем яркость при наведении */
+      transform: scale(1.08);
+      opacity: 1;
     }
 
     /* ТУРНИРЫ */
     .tournament-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 20px;
     }
     .tournament-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -216,98 +216,102 @@
     .tournament-card:hover {
       background: var(--bg-card-hover);
       border-color: rgba(16, 185, 129, 0.4);
-      transform: translateY(-3px);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
-    .t-info h4 { margin: 0 0 5px 0; font-size: 18px; font-weight: 600; }
-    .t-info span { color: var(--text-muted); font-size: 14px; }
-    .t-prize { font-size: 22px; font-weight: 700; color: var(--accent); margin-top: auto; }
+    .t-info h4 { margin: 0 0 5px 0; font-size: 20px; font-weight: 700; }
+    .t-info span { color: var(--text-muted); font-size: 15px; }
+    .t-prize { font-size: 26px; font-weight: 800; color: var(--accent); margin-top: auto; }
 
     /* ТАРИФЫ */
     .cards-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      gap: 25px;
     }
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 40px 30px;
+      border-radius: 16px;
+      padding: 45px 30px;
       text-align: center;
-      transition: transform 0.2s ease, border-color 0.3s; /* Плавный 3D наклон */
+      transition: all 0.3s;
+      position: relative;
     }
     .card:hover {
-      border-color: rgba(16, 185, 129, 0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
     }
     .card.vip {
       border-color: var(--accent);
       background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.05) 100%);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
     }
-    .card h3 { font-size: 20px; margin-top: 0; color: var(--text-main); }
-    .price { font-size: 40px; font-weight: 700; color: var(--text-main); margin: 20px 0; }
-    .price span { font-size: 14px; color: var(--text-muted); font-weight: 400; }
-    .card ul { list-style: none; padding: 0; margin: 0 0 30px 0; color: var(--text-muted); line-height: 2; font-size: 15px; }
+    .card h3 { font-size: 22px; margin-top: 0; }
+    .price { font-size: 48px; font-weight: 900; margin: 20px 0; color: #fff;}
+    .price span { font-size: 16px; color: var(--text-muted); font-weight: 400; }
+    .card ul { list-style: none; padding: 0; margin: 0 0 35px 0; color: var(--text-muted); line-height: 2.2; font-size: 16px; }
     .btn-card {
-      width: 100%; padding: 14px 0; background: transparent;
-      border: 1px solid var(--border-color); color: var(--text-main);
-      border-radius: 8px; font-weight: 500; font-size: 15px;
+      width: 100%; padding: 16px 0; background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text-main);
+      border-radius: 12px; font-weight: 600; font-size: 16px;
       transition: all 0.3s; cursor: pointer;
     }
     .btn-card:hover {
       background: var(--accent); border-color: var(--accent); color: #fff;
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     /* КОНТАКТЫ */
     .contacts-wrapper {
       display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
       background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: 12px; overflow: hidden;
+      border-radius: 20px; overflow: hidden;
     }
-    .contact-info { padding: 40px; }
-    .contact-info h3 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin-top: 0; }
-    .contact-info p { color: var(--text-muted); font-size: 15px; margin-bottom: 15px; line-height: 1.6; }
-    .contact-info strong { color: var(--text-main); }
-    .map-container iframe { width: 100%; height: 100%; min-height: 300px; border: 0; filter: grayscale(100%) invert(90%) contrast(80%); }
+    .contact-info { padding: 50px; }
+    .contact-info h3 { font-family: 'Montserrat', sans-serif; font-size: 28px; margin-top: 0; }
+    .contact-info p { color: var(--text-muted); font-size: 16px; margin-bottom: 20px; line-height: 1.6; }
+    .contact-info strong { color: #fff; }
+    .map-container iframe { width: 100%; height: 100%; min-height: 350px; border: 0; filter: grayscale(100%) invert(90%) contrast(80%); }
 
     /* МОДАЛЬНОЕ ОКНО */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000;
+      backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center;
+      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 2000;
     }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal-content {
       background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: 16px; padding: 40px; width: 90%; max-width: 420px;
-      position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      transform: translateY(20px); transition: transform 0.3s;
+      border-radius: 20px; padding: 40px; width: 90%; max-width: 450px;
+      position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+      transform: translateY(30px); transition: transform 0.3s;
     }
     .modal-overlay.active .modal-content { transform: translateY(0); }
-    .close-modal { position: absolute; top: 20px; right: 20px; color: var(--text-muted); font-size: 24px; cursor: pointer; background: none; border: none; }
-    .close-modal:hover { color: var(--text-main); }
-    .modal-content h3 { text-align: center; margin-top: 0; font-family: 'Montserrat', sans-serif; }
-    .modal-content p { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+    .close-modal { position: absolute; top: 20px; right: 20px; color: var(--text-muted); font-size: 28px; cursor: pointer; background: none; border: none; }
+    .close-modal:hover { color: #fff; }
+    .modal-content h3 { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 24px; margin-top: 0; }
+    .modal-content p { text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 25px; }
     .modal-content input, .modal-content select {
-      width: 100%; padding: 14px; background: var(--bg-main); border: 1px solid var(--border-color);
-      border-radius: 8px; color: var(--text-main); font-size: 15px; margin-bottom: 15px; outline: none;
+      width: 100%; padding: 16px; background: var(--bg-main); border: 1px solid var(--border-color);
+      border-radius: 12px; color: #fff; font-size: 16px; margin-bottom: 15px; outline: none;
     }
     .modal-content input:focus, .modal-content select:focus { border-color: var(--accent); }
-    .modal-content select option { background: var(--bg-main); }
     ::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     .btn-submit {
-      width: 100%; padding: 15px; background: var(--accent); color: #fff;
-      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
-      cursor: pointer; transition: opacity 0.3s;
+      width: 100%; padding: 16px; background: var(--accent); color: #fff;
+      border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all 0.3s; margin-top: 10px;
     }
-    .btn-submit:hover { opacity: 0.9; }
+    .btn-submit:hover { background: #059669; box-shadow: 0 0 20px var(--accent-glow); }
 
-    footer { text-align: center; padding: 40px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; }
+    footer { text-align: center; padding: 40px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 15px; margin-top: 50px; }
 
     @media (max-width: 768px) {
-      header { flex-direction: column; gap: 15px; padding: 15px; }
-      nav a { margin: 0 10px; }
+      header { flex-direction: column; padding: 20px; gap: 20px; border-radius: 20px; }
+      nav { flex-wrap: wrap; justify-content: center; gap: 15px; }
+      .hero { padding-top: 250px; }
       .contacts-wrapper { grid-template-columns: 1fr; }
-      .hero { padding: 80px 20px; }
     }
   </style>
 </head>
@@ -315,52 +319,47 @@
 
   <canvas id="matrix-canvas"></canvas>
 
-  <div class="ticker-wrapper">
-    <div class="ticker">
-      <span>Система активна // Добро пожаловать в ARENA // Ближайший турнир по CS2 в пятницу // Скидка 20% на ночные пакеты //</span>
-      <span>Система активна // Добро пожаловать в ARENA // Ближайший турнир по CS2 в пятницу // Скидка 20% на ночные пакеты //</span>
-    </div>
+  <!-- ПАРЯЩАЯ НАВИГАЦИЯ -->
+  <div class="nav-container">
+    <header>
+      <div class="logo">ARENA<span>.</span></div>
+      <nav>
+        <a href="#hero" class="active">Главная</a>
+        <a href="#gallery">Клуб</a>
+        <a href="#tournaments">Турниры</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+    </header>
   </div>
 
-  <header>
-    <div class="logo">ARENA<span>.</span></div>
-    <nav>
-      <a href="#hero" class="active">Главная</a>
-      <a href="#gallery">Клуб</a>
-      <a href="#tournaments">Турниры</a>
-      <a href="#pricing">Тарифы</a>
-      <a href="#contacts">Контакты</a>
-    </nav>
-  </header>
-
   <section class="hero" id="hero">
-    <h1>Твоя зона <span>победы</span></h1>
+    <h1>ИГРА НАЧИНАЕТСЯ<br><span>ЗДЕСЬ</span></h1>
     <p>Мощные ПК, топовые консоли и атмосфера настоящего киберспорта. Заходи, занимай место, забирай победу.</p>
-    <button class="btn-main" onclick="openModal()">Забронировать место</button>
+    <button class="btn-main" onclick="openModal()">Забронировать место 🎮</button>
   </section>
 
-  <!-- ГАЛЕРЕЯ (6 ФОТО) -->
+  <!-- ГАЛЕРЕЯ (100% рабочие ссылки) -->
   <section id="gallery" class="fade-in">
     <h2 class="section-title">Атмосфера клуба</h2>
     <div class="gallery-grid">
-      <!-- Используем надежный CDN Pexels, добавлен onerror на случай сбоя сети -->
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/7915357/pexels-photo-7915357.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Игровая зона" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Игровая зона" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/3945653/pexels-photo-3945653.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Геймеры" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=800&auto=format&fit=crop" alt="Геймеры" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Консоли" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=800&auto=format&fit=crop" alt="Киберспорт" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Киберспорт арена" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop" alt="Консоли" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Геймпад" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?q=80&w=800&auto=format&fit=crop" alt="Сетап" loading="lazy">
       </div>
       <div class="gallery-item">
-        <img src="https://images.pexels.com/photos/2007647/pexels-photo-2007647.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Сетап" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=800&auto=format&fit=crop" alt="Неон" loading="lazy">
       </div>
     </div>
   </section>
@@ -502,7 +501,7 @@
       let current = '';
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        if (scrollY >= (sectionTop - 200)) {
+        if (scrollY >= (sectionTop - 250)) {
           current = section.getAttribute('id');
         }
       });
@@ -514,42 +513,7 @@
       });
     });
 
-    // --- 3. ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ ---
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.fade-in').forEach(section => {
-      observer.observe(section);
-    });
-
-    // --- 4. 3D НАКЛОН (TILT) - ДЕЛИКАТНЫЙ ---
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (!isMobile) {
-      const tiltCards = document.querySelectorAll('.tilt');
-      tiltCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -4; // Снизили до 4 градусов для минимализма
-          const rotateY = ((x - centerX) / centerX) * 4;
-          
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
-        });
-      });
-    }
-
-    // --- 5. МАТРИЧНЫЙ ФОН (Приятный изумрудный) ---
+    // --- 3. МАТРИЧНЫЙ ФОН ---
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -562,9 +526,9 @@
     for (let x = 0; x < columns; x++) drops[x] = 1;
 
     function drawMatrix() {
-      ctx.fillStyle = 'rgba(10, 11, 14, 0.1)'; // Шлейф
+      ctx.fillStyle = 'rgba(10, 11, 14, 0.1)'; 
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#10b981'; // Изумрудный
+      ctx.fillStyle = '#10b981'; 
       ctx.font = fontSize + 'px monospace';
 
       for (let i = 0; i < drops.length; i++) {
